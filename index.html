@@ -1,0 +1,2369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Construction Finance Accountant Grade - Local First</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #111827;
+      --panel2: #172033;
+      --line: #334155;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --accent: #38bdf8;
+      --shadow: 0 10px 28px rgba(0,0,0,.28);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #08101f 0%, #111827 100%);
+    }
+    .app { display: grid; grid-template-columns: 290px 1fr; min-height: 100vh; }
+    aside {
+      background: rgba(9, 14, 27, 0.98);
+      border-right: 1px solid var(--line);
+      padding: 18px 14px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+    .brand { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .brand-sub { color: var(--muted); font-size: 13px; line-height: 1.45; margin-bottom: 18px; }
+    .nav button {
+      width: 100%; text-align: left; padding: 11px 13px; margin-bottom: 8px;
+      border-radius: 12px; background: transparent; color: var(--text);
+      border: 1px solid transparent; cursor: pointer;
+    }
+    .nav button.active, .nav button:hover {
+      background: rgba(56,189,248,.12);
+      border-color: rgba(56,189,248,.35);
+      color: #e0f2fe;
+    }
+    main { padding: 22px; }
+    .topbar { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .title h1 { margin: 0 0 6px; font-size: 28px; }
+    .title p { margin: 0; color: var(--muted); }
+    .top-actions, .toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
+    button, .btn {
+      padding: 10px 13px; border-radius: 12px; border: 1px solid var(--line);
+      background: var(--panel2); color: var(--text); cursor: pointer; font-size: 14px;
+    }
+    button.primary { background: linear-gradient(180deg, #0284c7, #0369a1); border-color: #38bdf8; }
+    button.success { background: #14532d; border-color: #22c55e; }
+    button.warn { background: #78350f; border-color: #f59e0b; }
+    button.danger { background: #7f1d1d; border-color: #ef4444; }
+    button.subtle { background: transparent; }
+    .panel {
+      background: rgba(17,24,39,.98);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .panel h2,.panel h3 { margin-top: 0; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+    .stat {
+      border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+      background: linear-gradient(180deg, rgba(30,41,59,.92), rgba(17,24,39,.98));
+    }
+    .stat .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
+    .stat .value { font-size: 25px; font-weight: 700; }
+    .good { color: #4ade80; }
+    .warn-text { color: #fbbf24; }
+    .bad { color: #f87171; }
+    .muted { color: var(--muted); }
+    .section-head { display:flex; justify-content: space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom: 12px; }
+    .scroll-x { overflow-x: auto; }
+    .form-grid { display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+    .span-2 { grid-column: span 2; }
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    label {
+      display:block; font-size: 12px; text-transform: uppercase; letter-spacing: .03em;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    input, select, textarea {
+      width:100%; padding:10px 12px; border-radius: 10px; border: 1px solid var(--line);
+      background: #09111f; color: var(--text);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th {
+      text-align:left; padding: 11px; background: #0b1220; color:#cbd5e1;
+      border-bottom:1px solid var(--line); position: sticky; top: 0;
+    }
+    tbody td { padding: 11px; border-bottom:1px solid rgba(148,163,184,.14); vertical-align: top; }
+    tbody tr:hover { background: rgba(148,163,184,.06); }
+    .badge {
+      display:inline-block; padding:4px 8px; border-radius:999px;
+      font-size:12px; border:1px solid currentColor;
+    }
+    .hidden { display:none !important; }
+    .footer-note, .kpi-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .print-only { display:none; }
+    @media (max-width: 1120px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      .grid-4, .grid-3, .form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .span-3, .span-4, .span-2 { grid-column: span 2; }
+    }
+    @media (max-width: 720px) {
+      main { padding: 14px; }
+      .grid-4, .grid-3, .grid-2, .form-grid { grid-template-columns: 1fr; }
+      .span-3, .span-4, .span-2 { grid-column: span 1; }
+    }
+    @media print {
+      body { background:#fff; color:#000; }
+      aside, .topbar, .no-print { display:none !important; }
+      .panel { box-shadow:none; border:1px solid #ccc; background:#fff; color:#000; }
+      .print-only { display:block; }
+      thead th { background:#f3f4f6; color:#000; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand">Construction Finance</div>
+    <div class="brand-sub">
+      Accountant-grade local-first finance tracker for projects, bills, billings, payments, checks, bank, petty cash, payroll, controls, and reports.
+    </div>
+    <div class="nav">
+      <button class="active" data-view="dashboard">Dashboard</button>
+      <button data-view="projects">Projects</button>
+      <button data-view="bills">AP Bills / Expenses</button>
+      <button data-view="billings">AR Billings / Collections</button>
+      <button data-view="payments">Disbursements</button>
+      <button data-view="receipts">Receipts</button>
+      <button data-view="checks">Checks</button>
+      <button data-view="bank">Bank</button>
+      <button data-view="petty">Petty Cash</button>
+      <button data-view="payroll">Payroll</button>
+      <button data-view="controls">Controls</button>
+      <button data-view="reports">Reports</button>
+      <button data-view="settings">Backup / Settings</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar no-print">
+      <div class="title">
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Monitor cash, payables, receivables, controls, and bank exposure.</p>
+      </div>
+      <div class="top-actions">
+        <button onclick="seedSampleData()">Load Sample Data</button>
+        <button class="primary" onclick="quickBackup()">Export Backup</button>
+        <button onclick="printCurrentView()">Print</button>
+      </div>
+    </div>
+
+    <section id="view-dashboard" class="view">
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Cash and Liability Position</h2>
+            <div class="muted">Bank book, available bank, petty cash, receivables, payables, and outstanding checks.</div>
+          </div>
+        </div>
+        <div class="grid-4">
+          <div class="stat"><div class="label">Bank Book Balance</div><div class="value" id="kpiBankBook">₱0.00</div></div>
+          <div class="stat"><div class="label">Available Bank Balance</div><div class="value" id="kpiBankAvailable">₱0.00</div></div>
+          <div class="stat"><div class="label">Petty Cash On Hand</div><div class="value" id="kpiPettyCash">₱0.00</div></div>
+          <div class="stat"><div class="label">Outstanding Checks</div><div class="value" id="kpiOutstandingChecks">₱0.00</div></div>
+        </div>
+        <div class="grid-4" style="margin-top:12px;">
+          <div class="stat"><div class="label">AR Outstanding</div><div class="value" id="kpiAROutstanding">₱0.00</div></div>
+          <div class="stat"><div class="label">AP Outstanding</div><div class="value" id="kpiAPOutstanding">₱0.00</div></div>
+          <div class="stat"><div class="label">This Week Approved Bills</div><div class="value" id="kpiWeeklyBills">₱0.00</div></div>
+          <div class="stat"><div class="label">Payroll This Year</div><div class="value" id="kpiPayrollYear">₱0.00</div></div>
+        </div>
+        <div class="kpi-note">
+          Available Bank = Bank Book - Released but not yet cleared checks. AP outstanding is based on approved bills less released/cleared/posted disbursements.
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Recent Bills</h3>
+          <div class="scroll-x"><table><thead><tr><th>Date</th><th>Supplier</th><th>Project</th><th>Status</th><th>Net Payable</th></tr></thead><tbody id="recentBillsTable"></tbody></table></div>
+        </div>
+        <div class="panel">
+          <h3>Recent Billings</h3>
+          <div class="scroll-x"><table><thead><tr><th>Date</th><th>Client</th><th>Project</th><th>Status</th><th>Net Receivable</th></tr></thead><tbody id="recentBillingsTable"></tbody></table></div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="panel"><h3>AP Aging</h3><div id="dashboardAPAging"></div></div>
+        <div class="panel"><h3>AR Aging</h3><div id="dashboardARAging"></div></div>
+        <div class="panel"><h3>Period Controls</h3><div id="dashboardLocks"></div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel"><h3>Project Profit Snapshot</h3><div id="projectHealthSummary"></div></div>
+        <div class="panel"><h3>Recent Audit Log</h3><div id="dashboardAudit"></div></div>
+      </div>
+    </section>
+
+    <section id="view-projects" class="view hidden">
+      <div class="panel no-print">
+        <h2>Project Master</h2>
+        <div class="form-grid">
+          <div><label>Project Code</label><input id="projectCode" placeholder="PRJ-001"></div>
+          <div><label>Project Name</label><input id="projectName" placeholder="Project name"></div>
+          <div><label>Client</label><input id="projectClient" placeholder="Client name"></div>
+          <div><label>Status</label><select id="projectStatus"><option>Ongoing</option><option>Completed</option><option>On Hold</option></select></div>
+          <div><label>Type</label><select id="projectType"><option>Construction</option><option>Office</option><option>Charge to Owner</option><option>Minor Works</option></select></div>
+          <div><label>Contract Amount</label><input id="projectContract" type="number" step="0.01" placeholder="0.00"></div>
+          <div class="span-2"><label>Remarks</label><input id="projectRemarks" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px;"><button class="primary" onclick="addProject()">Add Project</button></div>
+      </div>
+      <div class="panel">
+        <div class="section-head"><h2>Projects</h2><div class="muted">Project-level collections, expenses, and margin view.</div></div>
+        <div class="scroll-x"><table><thead><tr><th>Code</th><th>Project</th><th>Client</th><th>Status</th><th>Contract</th><th>Collected</th><th>Bills</th><th>Margin View</th><th>Actions</th></tr></thead><tbody id="projectsTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-bills" class="view hidden">
+      <div class="panel no-print">
+        <h2>Record AP Bill / Expense</h2>
+        <div class="form-grid">
+          <div><label>Bill Date</label><input id="billDate" type="date"></div>
+          <div><label>Due Date</label><input id="billDueDate" type="date"></div>
+          <div><label>Project</label><select id="billProject"></select></div>
+          <div><label>Supplier / Payee</label><input id="billSupplier" placeholder="Supplier name"></div>
+
+          <div><label>Category</label><select id="billCategory"><option>Materials</option><option>Overhead</option><option>Labor</option><option>Admin</option></select></div>
+          <div><label>Work Type</label><select id="billWorkType"><option>Construction</option><option>Electrical</option><option>Plumbing</option><option>Design</option><option>Office</option></select></div>
+          <div><label>Reference No.</label><input id="billReference" placeholder="Invoice / CV / DR / OR"></div>
+          <div><label>Status</label><select id="billStatus"><option>Draft</option><option>Approved</option></select></div>
+
+          <div><label>Base Amount</label><input id="billBaseAmount" type="number" step="0.01" placeholder="0.00" oninput="previewBillAmounts()"></div>
+          <div><label>VAT Rate %</label><input id="billVatRate" type="number" step="0.01" placeholder="12" value="12" oninput="previewBillAmounts()"></div>
+          <div><label>WHT Rate %</label><input id="billWhtRate" type="number" step="0.01" placeholder="0" value="0" oninput="previewBillAmounts()"></div>
+          <div><label>Retention Amount</label><input id="billRetentionAmount" type="number" step="0.01" placeholder="0.00" value="0" oninput="previewBillAmounts()"></div>
+
+          <div><label>VAT Amount</label><input id="billVatAmount" type="number" step="0.01" placeholder="0.00" readonly></div>
+          <div><label>WHT Amount</label><input id="billWhtAmount" type="number" step="0.01" placeholder="0.00" readonly></div>
+          <div><label>Gross Amount</label><input id="billGrossAmount" type="number" step="0.01" placeholder="0.00" readonly></div>
+          <div><label>Net Payable</label><input id="billNetPayable" type="number" step="0.01" placeholder="0.00" readonly></div>
+
+          <div class="span-4"><label>Particulars</label><textarea id="billParticulars" rows="2" placeholder="What was billed or purchased"></textarea></div>
+          <div class="span-4"><label>Remarks</label><input id="billRemarks" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="primary" onclick="addBill()">Add Bill</button>
+          <span class="muted">Bills can be recorded first and paid later through Disbursements.</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-head">
+          <h2>AP Bills Register</h2>
+          <div class="toolbar no-print">
+            <input id="billSearch" placeholder="Search supplier, project, reference" oninput="renderBills()">
+            <select id="billFilterStatus" onchange="renderBills()"><option value="">All Statuses</option><option>Draft</option><option>Approved</option><option>Partially Paid</option><option>Paid</option><option>Void</option></select>
+          </div>
+        </div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Due</th><th>Supplier</th><th>Project</th><th>Status</th><th>Gross</th><th>Net Payable</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="billsTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-billings" class="view hidden">
+      <div class="panel no-print">
+        <h2>Record AR Billing / Collection Claim</h2>
+        <div class="form-grid">
+          <div><label>Billing Date</label><input id="billingDate" type="date"></div>
+          <div><label>Due Date</label><input id="billingDueDate" type="date"></div>
+          <div><label>Project</label><select id="billingProject"></select></div>
+          <div><label>Client</label><input id="billingClient" placeholder="Client name"></div>
+
+          <div><label>Reference</label><input id="billingReference" placeholder="Billing / SOA / Invoice No."></div>
+          <div><label>Status</label><select id="billingStatus"><option>Draft</option><option>Approved</option></select></div>
+          <div><label>Billed Amount</label><input id="billingAmount" type="number" step="0.01" placeholder="0.00" oninput="previewBillingAmounts()"></div>
+          <div><label>Withholding Amount</label><input id="billingWhtAmount" type="number" step="0.01" placeholder="0.00" value="0" oninput="previewBillingAmounts()"></div>
+
+          <div><label>Retention Amount</label><input id="billingRetentionAmount" type="number" step="0.01" placeholder="0.00" value="0" oninput="previewBillingAmounts()"></div>
+          <div><label>Net Receivable</label><input id="billingNetReceivable" type="number" step="0.01" placeholder="0.00" readonly></div>
+          <div class="span-2"><label>Remarks</label><input id="billingRemarks" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px;"><button class="primary" onclick="addBilling()">Add Billing</button></div>
+      </div>
+      <div class="panel">
+        <div class="section-head">
+          <h2>AR Billings Register</h2>
+          <div class="toolbar no-print">
+            <input id="billingSearch" placeholder="Search client, project, reference" oninput="renderBillings()">
+            <select id="billingFilterStatus" onchange="renderBillings()"><option value="">All Statuses</option><option>Draft</option><option>Approved</option><option>Partially Collected</option><option>Collected</option><option>Void</option></select>
+          </div>
+        </div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Due</th><th>Client</th><th>Project</th><th>Status</th><th>Billed</th><th>Net Receivable</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="billingsTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-payments" class="view hidden">
+      <div class="panel no-print">
+        <h2>Record Disbursement</h2>
+        <div class="form-grid">
+          <div><label>Payment Date</label><input id="paymentDate" type="date"></div>
+          <div><label>Bill</label><select id="paymentBill"></select></div>
+          <div><label>Method</label><select id="paymentMethod" onchange="togglePaymentSourceFields()"><option>Bank Transfer</option><option>Check</option><option>Petty Cash</option><option>Cash</option></select></div>
+          <div><label>Amount</label><input id="paymentAmount" type="number" step="0.01" placeholder="0.00"></div>
+
+          <div id="paymentBankWrap"><label>Bank Account</label><select id="paymentBank"></select></div>
+          <div id="paymentPettyWrap" class="hidden"><label>Petty Fund</label><select id="paymentPettyFund"></select></div>
+          <div><label>Reference</label><input id="paymentReference" placeholder="Transfer ref / voucher"></div>
+          <div><label>Status</label><select id="paymentStatus"><option>Posted</option><option>Prepared</option></select></div>
+
+          <div><label>Check Number (if check)</label><input id="paymentCheckNumber" placeholder="Optional"></div>
+          <div><label>Release Date (if check)</label><input id="paymentReleaseDate" type="date"></div>
+          <div class="span-2"><label>Remarks</label><input id="paymentRemarks" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="primary" onclick="addPayment()">Add Disbursement</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-head"><h2>Disbursements Register</h2><div class="muted">Bank transfer and petty cash post immediately. Checks move from Prepared → Released → Cleared.</div></div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Bill</th><th>Method</th><th>Status</th><th>Reference</th><th>Amount</th><th>Actions</th></tr></thead><tbody id="paymentsTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-receipts" class="view hidden">
+      <div class="panel no-print">
+        <h2>Record Receipt</h2>
+        <div class="form-grid">
+          <div><label>Receipt Date</label><input id="receiptDate" type="date"></div>
+          <div><label>Billing</label><select id="receiptBilling"></select></div>
+          <div><label>Amount</label><input id="receiptAmount" type="number" step="0.01" placeholder="0.00"></div>
+          <div><label>Method</label><select id="receiptMethod" onchange="toggleReceiptBankWrap()"><option>Bank Deposit</option><option>Cash</option></select></div>
+
+          <div id="receiptBankWrap"><label>Bank Account</label><select id="receiptBank"></select></div>
+          <div><label>Reference</label><input id="receiptReference" placeholder="Deposit slip / OR ref"></div>
+          <div><label>Status</label><select id="receiptStatus"><option>Posted</option><option>Pending</option></select></div>
+          <div><label>Remarks</label><input id="receiptRemarks" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px;"><button class="primary" onclick="addReceipt()">Add Receipt</button></div>
+      </div>
+      <div class="panel">
+        <div class="section-head"><h2>Receipts Register</h2><div class="muted">Posted bank deposits increase bank balance automatically.</div></div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Billing</th><th>Method</th><th>Status</th><th>Reference</th><th>Amount</th><th>Actions</th></tr></thead><tbody id="receiptsTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-checks" class="view hidden">
+      <div class="panel">
+        <div class="section-head"><h2>Checks Register</h2><div class="muted">Checks are usually created from Disbursements. Released checks reduce available bank; cleared checks reduce bank book.</div></div>
+        <div class="scroll-x"><table><thead><tr><th>Check #</th><th>Bank</th><th>Payee</th><th>Project</th><th>Issue Date</th><th>Release</th><th>Clear</th><th>Status</th><th>Amount</th><th>Actions</th></tr></thead><tbody id="checksTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-bank" class="view hidden">
+      <div class="grid-2">
+        <div class="panel no-print">
+          <h2>Bank Accounts</h2>
+          <div class="form-grid">
+            <div><label>Bank Name</label><input id="bankName" placeholder="BDO / BPI / Metrobank"></div>
+            <div><label>Account Label</label><input id="bankLabel" placeholder="Operating Account"></div>
+            <div><label>Starting Balance</label><input id="bankStartingBalance" type="number" step="0.01" placeholder="0.00"></div>
+            <div><label>Account No. (Optional)</label><input id="bankAccountNo" placeholder="****1234"></div>
+          </div>
+          <div style="margin-top:12px;"><button class="primary" onclick="addBankAccount()">Add Bank Account</button></div>
+        </div>
+        <div class="panel no-print">
+          <h2>Manual Bank Ledger Entry</h2>
+          <div class="form-grid">
+            <div><label>Date</label><input id="bankEntryDate" type="date"></div>
+            <div><label>Bank Account</label><select id="bankEntryBank"></select></div>
+            <div><label>Type</label><select id="bankEntryType"><option>Deposit</option><option>Withdrawal</option><option>Adjustment</option></select></div>
+            <div><label>Amount</label><input id="bankEntryAmount" type="number" step="0.01" placeholder="0.00"></div>
+            <div class="span-2"><label>Reference</label><input id="bankEntryReference" placeholder="Deposit slip / bank charge / note"></div>
+            <div class="span-2"><label>Remarks</label><input id="bankEntryRemarks" placeholder="Optional notes"></div>
+          </div>
+          <div style="margin-top:12px;"><button class="primary" onclick="addBankLedgerEntry()">Add Ledger Entry</button></div>
+        </div>
+      </div>
+
+      <div class="panel no-print">
+        <h2>Simple Bank Reconciliation</h2>
+        <div class="form-grid">
+          <div><label>Statement Date</label><input id="reconDate" type="date"></div>
+          <div><label>Bank Account</label><select id="reconBank"></select></div>
+          <div><label>Statement Balance</label><input id="reconBalance" type="number" step="0.01" placeholder="0.00"></div>
+          <div><label>Notes</label><input id="reconNotes" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px;"><button class="primary" onclick="addReconciliation()">Save Reconciliation Snapshot</button></div>
+      </div>
+
+      <div class="panel">
+        <h2>Bank Accounts Summary</h2>
+        <div class="scroll-x"><table><thead><tr><th>Bank</th><th>Label</th><th>Starting Balance</th><th>Book Balance</th><th>Outstanding Checks</th><th>Available</th><th>Last Statement</th><th>Recon Difference</th><th>Actions</th></tr></thead><tbody id="bankAccountsTable"></tbody></table></div>
+      </div>
+
+      <div class="panel">
+        <h2>Bank Ledger</h2>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Bank</th><th>Type</th><th>Reference</th><th>In</th><th>Out</th><th>Source</th><th>Remarks</th></tr></thead><tbody id="bankLedgerTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-petty" class="view hidden">
+      <div class="grid-2">
+        <div class="panel no-print">
+          <h2>Petty Cash Fund</h2>
+          <div class="form-grid">
+            <div><label>Fund Name</label><input id="pettyName" placeholder="Main Office Petty Cash"></div>
+            <div><label>Custodian</label><input id="pettyCustodian" placeholder="Responsible person"></div>
+            <div><label>Starting Fund</label><input id="pettyStarting" type="number" step="0.01" placeholder="0.00"></div>
+            <div><label>Notes</label><input id="pettyNotes" placeholder="Optional notes"></div>
+          </div>
+          <div style="margin-top:12px;"><button class="primary" onclick="addPettyFund()">Add Petty Cash Fund</button></div>
+        </div>
+        <div class="panel no-print">
+          <h2>Petty Cash Funding / Adjustment</h2>
+          <div class="form-grid">
+            <div><label>Date</label><input id="pettyEntryDate" type="date"></div>
+            <div><label>Petty Fund</label><select id="pettyEntryFund"></select></div>
+            <div><label>Type</label><select id="pettyEntryType"><option>Funding</option><option>Adjustment</option></select></div>
+            <div><label>Amount</label><input id="pettyEntryAmount" type="number" step="0.01" placeholder="0.00"></div>
+            <div class="span-2"><label>Reference</label><input id="pettyEntryReference" placeholder="Replenishment / note"></div>
+            <div class="span-2"><label>Remarks</label><input id="pettyEntryRemarks" placeholder="Optional notes"></div>
+          </div>
+          <div style="margin-top:12px;"><button class="primary" onclick="addPettyEntry()">Add Petty Entry</button></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Petty Cash Summary</h2>
+        <div class="scroll-x"><table><thead><tr><th>Fund</th><th>Custodian</th><th>Starting</th><th>Funding/Adj</th><th>Spent</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="pettyFundsTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-payroll" class="view hidden">
+      <div class="panel no-print">
+        <h2>Payroll Summary</h2>
+        <div class="form-grid">
+          <div><label>Payroll Date</label><input id="payrollDate" type="date"></div>
+          <div><label>Payroll Period</label><input id="payrollPeriod" placeholder="Jan 1-15, 2026"></div>
+          <div><label>Employee</label><input id="payrollEmployee" placeholder="Employee name"></div>
+          <div><label>Department</label><input id="payrollDept" placeholder="Accounting / Office / Operations"></div>
+          <div><label>Gross</label><input id="payrollGross" type="number" step="0.01" placeholder="0.00"></div>
+          <div><label>Deductions</label><input id="payrollDeductions" type="number" step="0.01" placeholder="0.00"></div>
+          <div><label>Employer Share</label><input id="payrollEmployerShare" type="number" step="0.01" placeholder="0.00"></div>
+          <div><label>Net Pay</label><input id="payrollNet" type="number" step="0.01" placeholder="0.00"></div>
+          <div><label>Status</label><select id="payrollStatus"><option>Draft</option><option>Approved</option></select></div>
+          <div class="span-3"><label>Remarks</label><input id="payrollRemarks" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px;"><button class="primary" onclick="addPayroll()">Add Payroll</button></div>
+      </div>
+      <div class="panel">
+        <h2>Payroll Register</h2>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Period</th><th>Employee</th><th>Department</th><th>Status</th><th>Gross</th><th>Deductions</th><th>Employer Share</th><th>Net</th><th>Actions</th></tr></thead><tbody id="payrollTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-controls" class="view hidden">
+      <div class="grid-2">
+        <div class="panel no-print">
+          <h2>Lock Accounting Period</h2>
+          <div class="form-grid">
+            <div><label>Month</label><input id="lockPeriodMonth" type="month"></div>
+            <div><label>Reason</label><input id="lockReason" placeholder="Month-end closed"></div>
+            <div><label>Locked By</label><input id="lockBy" placeholder="Name"></div>
+            <div><label>&nbsp;</label><button class="primary" onclick="lockPeriod()">Lock Period</button></div>
+          </div>
+          <div class="footer-note">Locked periods block add, approve, delete, and status changes for dated records in that month.</div>
+        </div>
+        <div class="panel">
+          <h2>Locked Periods</h2>
+          <div class="scroll-x"><table><thead><tr><th>Month</th><th>Reason</th><th>Locked By</th><th>Date</th><th>Actions</th></tr></thead><tbody id="lockedPeriodsTable"></tbody></table></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-head"><h2>Audit Log</h2><div class="muted">Each add, delete, approval, payment, receipt, lock, and import is recorded locally.</div></div>
+        <div class="scroll-x"><table><thead><tr><th>Timestamp</th><th>Action</th><th>Entity</th><th>Reference</th><th>Details</th></tr></thead><tbody id="auditLogTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-reports" class="view hidden">
+      <div class="panel no-print">
+        <h2>Reports</h2>
+        <div class="grid-3">
+          <div><label>Weekly Report Start</label><input id="reportWeekStart" type="date"></div>
+          <div><label>Weekly Report End</label><input id="reportWeekEnd" type="date"></div>
+          <div><label>Project Filter</label><select id="reportProjectFilter"></select></div>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="primary" onclick="renderReports()">Refresh Reports</button>
+          <button onclick="window.print()">Print Current Reports</button>
+        </div>
+      </div>
+
+      <div class="print-only">
+        <h1>Construction Finance Report</h1>
+        <p id="printReportMeta"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Weekly Approved Bills Report</h2>
+        <div id="weeklyReportTotals" class="muted" style="margin-bottom:10px;"></div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Supplier</th><th>Project</th><th>Category</th><th>Status</th><th>Net Payable</th></tr></thead><tbody id="weeklyReportTable"></tbody></table></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel"><h2>AP Aging Detail</h2><div id="apAgingDetail"></div></div>
+        <div class="panel"><h2>AR Aging Detail</h2><div id="arAgingDetail"></div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel"><h2>Year Summary</h2><div id="yearSummary"></div></div>
+        <div class="panel"><h2>Payroll Annual Summary</h2><div id="annualPayrollSummary"></div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel"><h2>Outstanding Checks</h2><div id="outstandingChecksSummary"></div></div>
+        <div class="panel"><h2>Supplier Exposure</h2><div id="supplierExposureSummary"></div></div>
+      </div>
+    </section>
+
+    <section id="view-settings" class="view hidden">
+      <div class="panel">
+        <h2>Backup / Restore / Cloud Sync</h2>
+        <p class="muted">
+          This version now keeps a local browser copy and can also sync the entire working state to Supabase. Local save still happens first so the app keeps working even if cloud sync is not ready yet.
+        </p>
+        <div id="cloudStatusBox" style="margin-top:12px;"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;" class="no-print">
+          <button class="primary" onclick="quickBackup()">Export Backup JSON</button>
+          <label class="btn" for="importFile">Import Backup JSON</label>
+          <input id="importFile" type="file" accept="application/json" class="hidden" onchange="importBackup(event)">
+          <button onclick="connectSupabaseNow()">Retry Cloud Connect</button>
+          <button onclick="pullStateFromCloud(true)">Pull Cloud to App</button>
+          <button onclick="pushStateToCloud(true)">Push App to Cloud</button>
+          <button onclick="clearAllData()" class="danger">Clear All Data</button>
+          <button onclick="migrateLegacyData()">Try Legacy Migration</button>
+        </div>
+        <div class="footer-note">
+          Legacy migration maps projects, expenses, collections, checks, banks, petty cash, and payroll from your earlier local version. In this Supabase refactor, the whole app state is stored in one cloud row first so the behavior stays stable before a later normalized-table migration.
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Current Supabase Storage Model</h2>
+        <div id="supabasePlan"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// --- App configuration / bootstrap ------------------------------------------------
+const AppConfig = {
+  storageKey: 'construction_finance_accountant_v2',
+  legacyKeys: ['construction_finance_local_v1', 'construction_finance_app_v1', 'construction_finance_app', 'ConstructionFinanceAppData'],
+  supabase: {
+    url: 'https://gakiacppptrinqmtrwxr.supabase.co',
+    key: 'sb_publishable_XcCgXUVUyouTBKKdMn4I6A_O5SfDTlr',
+    table: 'app_state',
+    stateKey: 'main'
+  },
+  titles: {
+    dashboard: ['Dashboard', 'Monitor cash, payables, receivables, controls, and bank exposure.'],
+    projects: ['Projects', 'Project master list used across all bills, billings, receipts, and payments.'],
+    bills: ['AP Bills / Expenses', 'Record approved supplier bills first, then settle them with disbursements.'],
+    billings: ['AR Billings / Collections', 'Record billings first, then settle them with receipts.'],
+    payments: ['Disbursements', 'Post bank transfers, petty cash payments, cash, and checks against bills.'],
+    receipts: ['Receipts', 'Record collections received and optionally deposit them to bank.'],
+    checks: ['Checks', 'Track check lifecycle from prepared to released to cleared.'],
+    bank: ['Bank', 'Manage bank accounts, ledger, and reconciliation snapshots.'],
+    petty: ['Petty Cash', 'Track petty funds, replenishments, and actual petty-cash spending.'],
+    payroll: ['Payroll', 'Record payroll summaries with approval status and employer share.'],
+    controls: ['Controls', 'Lock periods and review the local audit log.'],
+    reports: ['Reports', 'Review weekly bills, aging, annual summaries, and exposure reports.'],
+    settings: ['Backup / Settings', 'Export/import backups and sync the current app state with Supabase.']
+  }
+};
+
+const STORAGE_KEY = AppConfig.storageKey;
+const LEGACY_KEYS = AppConfig.legacyKeys;
+const titles = AppConfig.titles;
+const state = normalizeImportedState({});
+const cloud = {
+  client: null,
+  configured: Boolean(AppConfig.supabase.url && AppConfig.supabase.key),
+  stateKey: AppConfig.supabase.stateKey,
+  lastCloudUpdatedAt: '',
+  statusTone: 'muted',
+  lastSyncMessage: 'Local browser storage only',
+  saveTimer: null,
+  syncInFlight: false
+};
+
+function bindNavigation(){
+  document.querySelectorAll('.nav button').forEach(btn => {
+    btn.addEventListener('click', () => showView(btn.dataset.view));
+  });
+}
+
+async function initApp(){
+  bindNavigation();
+  setDefaultDates();
+  hydrateFromLocal();
+  populateSelectors();
+  renderAll();
+  showView('dashboard');
+  migrateLegacyData(false);
+  if (cloud.configured) {
+    await initSupabase();
+  } else {
+    setCloudStatus('Supabase is not configured. Using local browser storage only.', 'warn-text');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => { initApp(); });
+
+
+// --- Storage ---------------------------------------------------------------------
+function loadLocalState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return normalizeImportedState(JSON.parse(raw));
+  } catch (e) {}
+  return normalizeImportedState({});
+}
+
+function normalizeImportedState(input) {
+  return {
+    projects: arr(input.projects),
+    bills: arr(input.bills),
+    billings: arr(input.billings),
+    payments: arr(input.payments),
+    receipts: arr(input.receipts),
+    checks: arr(input.checks),
+    bankAccounts: arr(input.bankAccounts),
+    bankLedger: arr(input.bankLedger),
+    pettyFunds: arr(input.pettyFunds),
+    pettyEntries: arr(input.pettyEntries),
+    payroll: arr(input.payroll),
+    periodLocks: arr(input.periodLocks),
+    auditLog: arr(input.auditLog),
+    reconciliations: arr(input.reconciliations)
+  };
+}
+
+function arr(v){ return Array.isArray(v) ? v : []; }
+
+function replaceState(nextState) {
+  const normalized = normalizeImportedState(nextState || {});
+  Object.keys(normalized).forEach(key => {
+    state[key] = normalized[key];
+  });
+}
+
+function hydrateFromLocal() {
+  replaceState(loadLocalState());
+}
+
+function persistLocalState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function saveState() {
+  persistLocalState();
+  renderAll();
+  queueCloudSave();
+}
+
+function hasAnyAppData() {
+  return Object.values(state).some(value => Array.isArray(value) && value.length > 0);
+}
+
+function setCloudStatus(message, tone = 'muted') {
+  cloud.lastSyncMessage = message;
+  cloud.statusTone = tone;
+  renderCloudPanel();
+}
+
+function formatDateTime(value) {
+  if (!value) return '—';
+  try { return new Date(value).toLocaleString(); } catch (e) { return value; }
+}
+
+function renderCloudPanel() {
+  const panel = document.getElementById('cloudStatusBox');
+  if (!panel) return;
+  const mode = cloud.client ? 'Supabase sync ready' : 'Local browser storage only';
+  const updated = cloud.lastCloudUpdatedAt ? formatDateTime(cloud.lastCloudUpdatedAt) : 'No cloud timestamp yet';
+  panel.innerHTML = `
+    <div style="border:1px solid var(--line); border-radius:14px; padding:14px; background:linear-gradient(180deg, rgba(30,41,59,.92), rgba(17,24,39,.98));">
+      <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:8px;">
+        <strong>${mode}</strong>
+        <span class="badge ${cloud.statusTone || 'muted'}">${escapeHtml(cloud.client ? 'Cloud configured' : 'Local only')}</span>
+      </div>
+      <div class="${cloud.statusTone || 'muted'}" style="margin-bottom:6px;">${escapeHtml(cloud.lastSyncMessage || '')}</div>
+      <div class="muted">Workspace key: ${escapeHtml(cloud.stateKey)} | Last cloud update: ${escapeHtml(updated)}</div>
+    </div>
+  `;
+}
+
+async function initSupabase() {
+  try {
+    cloud.client = window.supabase.createClient(AppConfig.supabase.url, AppConfig.supabase.key, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    setCloudStatus('Supabase client ready. Checking cloud storage row…', 'warn-text');
+    const { data, error } = await cloud.client
+      .from(AppConfig.supabase.table)
+      .select('state_key, payload, updated_at')
+      .eq('state_key', cloud.stateKey)
+      .maybeSingle();
+
+    if (error) {
+      setCloudStatus(`Cloud table is not ready yet: ${error.message}`, 'bad');
+      return false;
+    }
+
+    if (data && data.payload) {
+      cloud.lastCloudUpdatedAt = data.updated_at || '';
+      if (!hasAnyAppData()) {
+        replaceState(data.payload);
+        persistLocalState();
+        renderAll();
+        setCloudStatus(`Cloud data loaded into the app. Last update: ${formatDateTime(cloud.lastCloudUpdatedAt)}`, 'good');
+      } else {
+        setCloudStatus(`Cloud row found. Use Pull Cloud to replace local data or Push App to Cloud to overwrite cloud. Cloud timestamp: ${formatDateTime(cloud.lastCloudUpdatedAt)}`, 'warn-text');
+      }
+      return true;
+    }
+
+    setCloudStatus('Cloud table is ready but no saved app state exists yet. Push local data to start using cloud storage.', 'warn-text');
+    return true;
+  } catch (error) {
+    setCloudStatus(`Supabase connection failed: ${error.message || error}`, 'bad');
+    return false;
+  }
+}
+
+function queueCloudSave() {
+  if (!cloud.client) return;
+  clearTimeout(cloud.saveTimer);
+  cloud.saveTimer = setTimeout(() => { pushStateToCloud(false); }, 700);
+}
+
+async function pushStateToCloud(showAlert = true) {
+  if (!cloud.client) {
+    setCloudStatus('Supabase is not connected yet. The app is still saving locally.', 'warn-text');
+    if (showAlert) alert('Supabase is not connected yet. Run the SQL setup first, then retry cloud connect.');
+    return false;
+  }
+  try {
+    cloud.syncInFlight = true;
+    setCloudStatus('Syncing current app state to cloud…', 'warn-text');
+    const payload = JSON.parse(JSON.stringify(state));
+    const row = {
+      state_key: cloud.stateKey,
+      payload,
+      updated_at: new Date().toISOString()
+    };
+    const { data, error } = await cloud.client
+      .from(AppConfig.supabase.table)
+      .upsert(row, { onConflict: 'state_key' })
+      .select('updated_at')
+      .single();
+    if (error) throw error;
+    cloud.lastCloudUpdatedAt = (data && data.updated_at) || row.updated_at;
+    setCloudStatus(`Cloud sync complete. Last update: ${formatDateTime(cloud.lastCloudUpdatedAt)}`, 'good');
+    if (showAlert) alert('Cloud sync complete.');
+    return true;
+  } catch (error) {
+    setCloudStatus(`Cloud sync failed: ${error.message || error}`, 'bad');
+    if (showAlert) alert(`Cloud sync failed: ${error.message || error}`);
+    return false;
+  } finally {
+    cloud.syncInFlight = false;
+  }
+}
+
+async function pullStateFromCloud(showAlert = true) {
+  if (!cloud.client) {
+    setCloudStatus('Supabase is not connected yet. The app is still using local data.', 'warn-text');
+    if (showAlert) alert('Supabase is not connected yet.');
+    return false;
+  }
+  try {
+    setCloudStatus('Loading latest cloud state…', 'warn-text');
+    const { data, error } = await cloud.client
+      .from(AppConfig.supabase.table)
+      .select('state_key, payload, updated_at')
+      .eq('state_key', cloud.stateKey)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data || !data.payload) {
+      setCloudStatus('No cloud data exists yet for this workspace key.', 'warn-text');
+      if (showAlert) alert('No cloud data exists yet.');
+      return false;
+    }
+    replaceState(data.payload);
+    persistLocalState();
+    cloud.lastCloudUpdatedAt = data.updated_at || '';
+    renderAll();
+    setCloudStatus(`Cloud data loaded. Last update: ${formatDateTime(cloud.lastCloudUpdatedAt)}`, 'good');
+    if (showAlert) alert('Cloud data loaded into the app.');
+    return true;
+  } catch (error) {
+    setCloudStatus(`Cloud pull failed: ${error.message || error}`, 'bad');
+    if (showAlert) alert(`Cloud pull failed: ${error.message || error}`);
+    return false;
+  }
+}
+
+async function connectSupabaseNow() {
+  await initSupabase();
+  renderCloudPanel();
+}
+
+
+// --- Shared utilities -------------------------------------------------------------
+function uid(prefix){ return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2,8)}`; }
+function today(){ return new Date().toISOString().slice(0,10); }
+function peso(v){ return Number(v||0).toLocaleString('en-PH',{style:'currency',currency:'PHP'}); }
+function valueOf(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function numberOf(id){ const n = parseFloat(valueOf(id)); return isNaN(n) ? 0 : n; }
+function text(id, value){ const el = document.getElementById(id); if (el) el.textContent = value; }
+function html(id, value){ const el = document.getElementById(id); if (el) el.innerHTML = value; }
+function escapeHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function clearFields(ids){ ids.forEach(id => { const el = document.getElementById(id); if (el) el.value=''; }); setDefaultDates(); }
+
+function logAudit(action, entity, reference, details){
+  state.auditLog.unshift({
+    id: uid('audit'),
+    timestamp: new Date().toISOString(),
+    action, entity, reference: reference || '', details: details || ''
+  });
+  state.auditLog = state.auditLog.slice(0, 1500);
+}
+
+function getMonthKey(dateStr){ return (dateStr || '').slice(0,7); }
+function isLocked(dateStr){
+  if (!dateStr) return false;
+  const month = getMonthKey(dateStr);
+  return state.periodLocks.some(x => x.month === month);
+}
+function ensureUnlocked(dateStr, actionLabel){
+  if (isLocked(dateStr)) {
+    alert(`This period is locked. Cannot ${actionLabel}.`);
+    return false;
+  }
+  return true;
+}
+
+function statusBadge(status){
+  const s = String(status||'').toLowerCase();
+  let cls = 'muted';
+  if (['approved','paid','collected','cleared','posted','completed'].includes(s)) cls = 'good';
+  else if (['draft','partial','partially paid','partially collected','prepared','released','pending','on hold'].includes(s)) cls = 'warn-text';
+  else if (['void','cancelled'].includes(s)) cls = 'bad';
+  return `<span class="badge ${cls}">${escapeHtml(status || '')}</span>`;
+}
+
+function summaryLine(label, value){
+  return `<div style="padding:8px 0;border-bottom:1px solid rgba(148,163,184,.12);display:flex;justify-content:space-between;gap:12px;"><span>${escapeHtml(String(label))}</span><strong>${escapeHtml(String(value))}</strong></div>`;
+}
+function summaryList(items, isMoney = false){
+  if (!items.length) return '<div class="muted">No data.</div>';
+  return items.map(item => `<div style="padding:8px 0;border-bottom:1px solid rgba(148,163,184,.12);display:flex;justify-content:space-between;gap:12px;"><span>${escapeHtml(item.label)}</span><strong>${isMoney ? peso(item.amount) : escapeHtml(String(item.amount))}</strong></div>`).join('');
+}
+function daysPastDue(dueDate){
+  if (!dueDate) return 0;
+  const due = new Date(dueDate);
+  const now = new Date();
+  due.setHours(0,0,0,0); now.setHours(0,0,0,0);
+  const diff = Math.floor((now - due)/(1000*60*60*24));
+  return diff > 0 ? diff : 0;
+}
+function bucketAmount(days, amount){
+  if (days <= 0) return ['Current', amount];
+  if (days <= 30) return ['1-30', amount];
+  if (days <= 60) return ['31-60', amount];
+  if (days <= 90) return ['61-90', amount];
+  return ['91+', amount];
+}
+function sumBy(items, getKey, getAmount){
+  const map = {};
+  items.forEach(item => {
+    const key = getKey(item);
+    map[key] = (map[key] || 0) + (getAmount(item) || 0);
+  });
+  return Object.entries(map).map(([label, amount]) => ({label, amount})).sort((a,b) => b.amount - a.amount);
+}
+
+function setDefaultDates(){
+  ['billDate','billDueDate','billingDate','billingDueDate','paymentDate','paymentReleaseDate','receiptDate','bankEntryDate','reconDate','pettyEntryDate','payrollDate'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value) el.value = today();
+  });
+  const now = new Date();
+  const start = document.getElementById('reportWeekStart');
+  const end = document.getElementById('reportWeekEnd');
+  if (start && end && !start.value && !end.value){
+    const endDate = now.toISOString().slice(0,10);
+    const startDate = new Date(now.getTime() - 6*24*60*60*1000).toISOString().slice(0,10);
+    start.value = startDate;
+    end.value = endDate;
+  }
+}
+
+
+// --- UI state / selectors ---------------------------------------------------------
+function showView(name){
+  document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+  document.getElementById(`view-${name}`).classList.remove('hidden');
+  document.querySelectorAll('.nav button').forEach(btn => btn.classList.toggle('active', btn.dataset.view === name));
+  const [t, sub] = titles[name];
+  text('pageTitle', t);
+  text('pageSubtitle', sub);
+  if (name === 'reports') renderReports();
+}
+
+function populateSelectors(){
+  const projectOptions = ['<option value="">Select Project</option>'].concat(
+    state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.code)} - ${escapeHtml(p.name)}</option>`)
+  ).join('');
+  ['billProject','billingProject'].forEach(id => resetOptions(id, projectOptions));
+  const reportProjectOptions = ['<option value="">All Projects</option>'].concat(
+    state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.code)} - ${escapeHtml(p.name)}</option>`)
+  ).join('');
+  resetOptions('reportProjectFilter', reportProjectOptions);
+
+  const billOptions = ['<option value="">Select Approved/Open Bill</option>'].concat(
+    state.bills.filter(b => getBillBalance(b.id) > 0 && !['Void'].includes(getBillDisplayStatus(b)))
+      .map(b => `<option value="${escapeHtml(b.id)}">${escapeHtml(b.reference || b.supplier || b.id)} | ${escapeHtml(projectName(b.projectId))} | Bal ${peso(getBillBalance(b.id))}</option>`)
+  ).join('');
+  resetOptions('paymentBill', billOptions);
+
+  const billingOptions = ['<option value="">Select Approved/Open Billing</option>'].concat(
+    state.billings.filter(b => getBillingBalance(b.id) > 0 && !['Void'].includes(getBillingDisplayStatus(b)))
+      .map(b => `<option value="${escapeHtml(b.id)}">${escapeHtml(b.reference || b.client || b.id)} | ${escapeHtml(projectName(b.projectId))} | Bal ${peso(getBillingBalance(b.id))}</option>`)
+  ).join('');
+  resetOptions('receiptBilling', billingOptions);
+
+  const bankOptions = ['<option value="">Select Bank</option>'].concat(
+    state.bankAccounts.map(b => `<option value="${escapeHtml(b.id)}">${escapeHtml(b.bankName)} - ${escapeHtml(b.label)}</option>`)
+  ).join('');
+  ['paymentBank','receiptBank','bankEntryBank','reconBank'].forEach(id => resetOptions(id, bankOptions));
+
+  const pettyOptions = ['<option value="">Select Petty Fund</option>'].concat(
+    state.pettyFunds.map(f => `<option value="${escapeHtml(f.id)}">${escapeHtml(f.name)}</option>`)
+  ).join('');
+  ['paymentPettyFund','pettyEntryFund'].forEach(id => resetOptions(id, pettyOptions));
+}
+
+function resetOptions(id, htmlOptions){
+  const el = document.getElementById(id);
+  if (!el) return;
+  const current = el.value;
+  el.innerHTML = htmlOptions;
+  if ([...el.options].some(o => o.value === current)) el.value = current;
+}
+
+function projectName(id){
+  const p = state.projects.find(x => x.id === id);
+  return p ? `${p.code} - ${p.name}` : '—';
+}
+function bankName(id){
+  const b = state.bankAccounts.find(x => x.id === id);
+  return b ? `${b.bankName} - ${b.label}` : '—';
+}
+function pettyName(id){
+  const f = state.pettyFunds.find(x => x.id === id);
+  return f ? f.name : '—';
+}
+function billLabel(id){
+  const b = state.bills.find(x => x.id === id);
+  return b ? `${b.reference || '(no ref)'} | ${b.supplier}` : '—';
+}
+function billingLabel(id){
+  const b = state.billings.find(x => x.id === id);
+  return b ? `${b.reference || '(no ref)'} | ${b.client}` : '—';
+}
+
+function previewBillAmounts(){
+  const base = numberOf('billBaseAmount');
+  const vatRate = numberOf('billVatRate');
+  const whtRate = numberOf('billWhtRate');
+  const retention = numberOf('billRetentionAmount');
+  const vatAmount = round2(base * (vatRate / 100));
+  const whtAmount = round2(base * (whtRate / 100));
+  const gross = round2(base + vatAmount);
+  const net = round2(gross - whtAmount - retention);
+  document.getElementById('billVatAmount').value = vatAmount.toFixed(2);
+  document.getElementById('billWhtAmount').value = whtAmount.toFixed(2);
+  document.getElementById('billGrossAmount').value = gross.toFixed(2);
+  document.getElementById('billNetPayable').value = net.toFixed(2);
+}
+function previewBillingAmounts(){
+  const billed = numberOf('billingAmount');
+  const wht = numberOf('billingWhtAmount');
+  const retention = numberOf('billingRetentionAmount');
+  const net = round2(billed - wht - retention);
+  document.getElementById('billingNetReceivable').value = net.toFixed(2);
+}
+function round2(v){ return Math.round((Number(v||0) + Number.EPSILON) * 100) / 100; }
+
+
+// --- Domain actions ----------------------------------------------------------------
+function addProject(){
+  const code = valueOf('projectCode');
+  const name = valueOf('projectName');
+  if (!code || !name) return alert('Project code and name are required.');
+  state.projects.unshift({
+    id: uid('project'),
+    code, name,
+    client: valueOf('projectClient'),
+    status: valueOf('projectStatus'),
+    type: valueOf('projectType'),
+    contractAmount: numberOf('projectContract'),
+    remarks: valueOf('projectRemarks'),
+    createdAt: new Date().toISOString()
+  });
+  logAudit('ADD', 'Project', code, `${name}`);
+  clearFields(['projectCode','projectName','projectClient','projectContract','projectRemarks']);
+  saveState();
+  showView('projects');
+}
+
+function addBill(){
+  const date = valueOf('billDate') || today();
+  if (!ensureUnlocked(date, 'add bill')) return;
+  const projectId = valueOf('billProject');
+  const supplier = valueOf('billSupplier');
+  const baseAmount = numberOf('billBaseAmount');
+  if (!projectId || !supplier || !baseAmount) return alert('Bill date, project, supplier, and base amount are required.');
+  const bill = {
+    id: uid('bill'),
+    date,
+    dueDate: valueOf('billDueDate'),
+    projectId,
+    supplier,
+    category: valueOf('billCategory'),
+    workType: valueOf('billWorkType'),
+    reference: valueOf('billReference'),
+    status: valueOf('billStatus'),
+    baseAmount,
+    vatRate: numberOf('billVatRate'),
+    vatAmount: round2(baseAmount * numberOf('billVatRate') / 100),
+    whtRate: numberOf('billWhtRate'),
+    whtAmount: round2(baseAmount * numberOf('billWhtRate') / 100),
+    retentionAmount: numberOf('billRetentionAmount'),
+    grossAmount: numberOf('billGrossAmount'),
+    netPayable: numberOf('billNetPayable'),
+    particulars: valueOf('billParticulars'),
+    remarks: valueOf('billRemarks'),
+    createdAt: new Date().toISOString()
+  };
+  state.bills.unshift(bill);
+  logAudit('ADD', 'Bill', bill.reference || bill.id, `${supplier} ${peso(bill.netPayable)}`);
+  clearFields(['billSupplier','billReference','billBaseAmount','billRetentionAmount','billParticulars','billRemarks']);
+  document.getElementById('billVatRate').value = '12';
+  document.getElementById('billWhtRate').value = '0';
+  previewBillAmounts();
+  saveState();
+  showView('bills');
+}
+
+function addBilling(){
+  const date = valueOf('billingDate') || today();
+  if (!ensureUnlocked(date, 'add billing')) return;
+  const projectId = valueOf('billingProject');
+  const client = valueOf('billingClient');
+  const billedAmount = numberOf('billingAmount');
+  if (!projectId || !client || !billedAmount) return alert('Billing date, project, client, and billed amount are required.');
+  const billing = {
+    id: uid('billing'),
+    date,
+    dueDate: valueOf('billingDueDate'),
+    projectId,
+    client,
+    reference: valueOf('billingReference'),
+    status: valueOf('billingStatus'),
+    billedAmount,
+    withholdingAmount: numberOf('billingWhtAmount'),
+    retentionAmount: numberOf('billingRetentionAmount'),
+    netReceivable: numberOf('billingNetReceivable'),
+    remarks: valueOf('billingRemarks'),
+    createdAt: new Date().toISOString()
+  };
+  state.billings.unshift(billing);
+  logAudit('ADD', 'Billing', billing.reference || billing.id, `${client} ${peso(billing.netReceivable)}`);
+  clearFields(['billingClient','billingReference','billingAmount','billingWhtAmount','billingRetentionAmount','billingRemarks']);
+  previewBillingAmounts();
+  saveState();
+  showView('billings');
+}
+
+function togglePaymentSourceFields(){
+  const method = valueOf('paymentMethod');
+  document.getElementById('paymentBankWrap').classList.toggle('hidden', !['Bank Transfer','Check'].includes(method));
+  document.getElementById('paymentPettyWrap').classList.toggle('hidden', method !== 'Petty Cash');
+  const statusEl = document.getElementById('paymentStatus');
+  if (method === 'Check') {
+    statusEl.innerHTML = '<option>Prepared</option><option>Released</option><option>Cleared</option>';
+  } else {
+    statusEl.innerHTML = '<option>Posted</option><option>Pending</option>';
+  }
+}
+function toggleReceiptBankWrap(){
+  const method = valueOf('receiptMethod');
+  document.getElementById('receiptBankWrap').classList.toggle('hidden', method !== 'Bank Deposit');
+}
+
+function addPayment(){
+  const date = valueOf('paymentDate') || today();
+  if (!ensureUnlocked(date, 'add disbursement')) return;
+  const billId = valueOf('paymentBill');
+  const method = valueOf('paymentMethod');
+  const amount = numberOf('paymentAmount');
+  if (!billId || !amount) return alert('Bill and amount are required.');
+  const balance = getBillBalance(billId);
+  if (amount > balance + 0.0001) return alert(`Payment exceeds bill balance. Current balance is ${peso(balance)}.`);
+  const bill = state.bills.find(x => x.id === billId);
+  if (!bill) return alert('Bill not found.');
+  const displayStatus = getBillDisplayStatus(bill);
+  if (displayStatus === 'Draft') return alert('Approve the bill first before paying it.');
+  const payment = {
+    id: uid('payment'),
+    date,
+    billId,
+    method,
+    amount,
+    bankId: ['Bank Transfer','Check'].includes(method) ? valueOf('paymentBank') : '',
+    pettyFundId: method === 'Petty Cash' ? valueOf('paymentPettyFund') : '',
+    reference: valueOf('paymentReference'),
+    status: valueOf('paymentStatus'),
+    remarks: valueOf('paymentRemarks'),
+    checkId: '',
+    createdAt: new Date().toISOString()
+  };
+  if (method === 'Bank Transfer' && !payment.bankId) return alert('Select a bank account.');
+  if (method === 'Petty Cash' && !payment.pettyFundId) return alert('Select a petty fund.');
+  if (method === 'Petty Cash' && amount > getPettyBalanceFor(payment.pettyFundId) + 0.0001) return alert('Petty fund does not have enough balance.');
+  if (method === 'Check' && !payment.bankId) return alert('Select a bank account for the check.');
+
+  state.payments.unshift(payment);
+  if (method === 'Bank Transfer' && payment.status === 'Posted') {
+    state.bankLedger.unshift({
+      id: uid('ledger'),
+      date,
+      bankId: payment.bankId,
+      type: 'Withdrawal',
+      reference: payment.reference || `Payment ${bill.reference || ''}`.trim(),
+      inAmount: 0,
+      outAmount: amount,
+      sourceType: 'Payment',
+      sourceId: payment.id,
+      remarks: `Bank transfer for ${bill.supplier}`
+    });
+  }
+  if (method === 'Check') {
+    const checkStatus = payment.status;
+    const check = {
+      id: uid('check'),
+      paymentId: payment.id,
+      billId,
+      checkNumber: valueOf('paymentCheckNumber'),
+      bankId: payment.bankId,
+      issueDate: date,
+      releaseDate: valueOf('paymentReleaseDate') || (['Released','Cleared'].includes(checkStatus) ? date : ''),
+      clearDate: checkStatus === 'Cleared' ? date : '',
+      payee: bill.supplier,
+      projectId: bill.projectId,
+      amount,
+      status: checkStatus,
+      remarks: valueOf('paymentRemarks'),
+      createdAt: new Date().toISOString()
+    };
+    state.checks.unshift(check);
+    payment.checkId = check.id;
+    if (check.status === 'Cleared') createLedgerFromCheck(check);
+  }
+
+  logAudit('ADD', 'Payment', payment.reference || payment.id, `${method} ${peso(amount)} for ${bill.reference || bill.supplier}`);
+  clearFields(['paymentAmount','paymentReference','paymentRemarks','paymentCheckNumber']);
+  saveState();
+  showView('payments');
+}
+
+function addReceipt(){
+  const date = valueOf('receiptDate') || today();
+  if (!ensureUnlocked(date, 'add receipt')) return;
+  const billingId = valueOf('receiptBilling');
+  const amount = numberOf('receiptAmount');
+  const method = valueOf('receiptMethod');
+  if (!billingId || !amount) return alert('Billing and amount are required.');
+  const balance = getBillingBalance(billingId);
+  if (amount > balance + 0.0001) return alert(`Receipt exceeds billing balance. Current balance is ${peso(balance)}.`);
+  const billing = state.billings.find(x => x.id === billingId);
+  if (!billing) return alert('Billing not found.');
+  if (getBillingDisplayStatus(billing) === 'Draft') return alert('Approve the billing first before receiving payment.');
+  const receipt = {
+    id: uid('receipt'),
+    date,
+    billingId,
+    amount,
+    method,
+    bankId: method === 'Bank Deposit' ? valueOf('receiptBank') : '',
+    reference: valueOf('receiptReference'),
+    status: valueOf('receiptStatus'),
+    remarks: valueOf('receiptRemarks'),
+    createdAt: new Date().toISOString()
+  };
+  if (method === 'Bank Deposit' && !receipt.bankId) return alert('Select a bank account.');
+  state.receipts.unshift(receipt);
+  if (method === 'Bank Deposit' && receipt.status === 'Posted') {
+    state.bankLedger.unshift({
+      id: uid('ledger'),
+      date,
+      bankId: receipt.bankId,
+      type: 'Deposit',
+      reference: receipt.reference || `Receipt ${billing.reference || ''}`.trim(),
+      inAmount: amount,
+      outAmount: 0,
+      sourceType: 'Receipt',
+      sourceId: receipt.id,
+      remarks: `Collection from ${billing.client}`
+    });
+  }
+  logAudit('ADD', 'Receipt', receipt.reference || receipt.id, `${method} ${peso(amount)} for ${billing.reference || billing.client}`);
+  clearFields(['receiptAmount','receiptReference','receiptRemarks']);
+  saveState();
+  showView('receipts');
+}
+
+function addBankAccount(){
+  const bankNameValue = valueOf('bankName');
+  const label = valueOf('bankLabel');
+  if (!bankNameValue || !label) return alert('Bank name and label are required.');
+  state.bankAccounts.unshift({
+    id: uid('bank'),
+    bankName: bankNameValue,
+    label,
+    startingBalance: numberOf('bankStartingBalance'),
+    accountNo: valueOf('bankAccountNo'),
+    createdAt: new Date().toISOString()
+  });
+  logAudit('ADD', 'Bank Account', bankNameValue, label);
+  clearFields(['bankName','bankLabel','bankStartingBalance','bankAccountNo']);
+  saveState();
+}
+
+function addBankLedgerEntry(){
+  const date = valueOf('bankEntryDate') || today();
+  if (!ensureUnlocked(date, 'add bank ledger entry')) return;
+  const bankId = valueOf('bankEntryBank');
+  const amount = numberOf('bankEntryAmount');
+  if (!bankId || !amount) return alert('Bank and amount are required.');
+  const type = valueOf('bankEntryType');
+  state.bankLedger.unshift({
+    id: uid('ledger'),
+    date,
+    bankId,
+    type,
+    reference: valueOf('bankEntryReference'),
+    inAmount: type === 'Deposit' ? amount : 0,
+    outAmount: type === 'Deposit' ? 0 : amount,
+    sourceType: 'Manual',
+    sourceId: '',
+    remarks: valueOf('bankEntryRemarks')
+  });
+  logAudit('ADD', 'Bank Ledger', valueOf('bankEntryReference'), `${type} ${peso(amount)}`);
+  clearFields(['bankEntryAmount','bankEntryReference','bankEntryRemarks']);
+  saveState();
+}
+
+function addReconciliation(){
+  const date = valueOf('reconDate') || today();
+  const bankId = valueOf('reconBank');
+  const statementBalance = numberOf('reconBalance');
+  if (!bankId || !statementBalance) return alert('Bank and statement balance are required.');
+  state.reconciliations.unshift({
+    id: uid('recon'),
+    date,
+    bankId,
+    statementBalance,
+    notes: valueOf('reconNotes'),
+    createdAt: new Date().toISOString()
+  });
+  logAudit('ADD', 'Reconciliation', bankName(bankId), `${peso(statementBalance)} as of ${date}`);
+  clearFields(['reconBalance','reconNotes']);
+  saveState();
+}
+
+function addPettyFund(){
+  const name = valueOf('pettyName');
+  if (!name) return alert('Fund name is required.');
+  state.pettyFunds.unshift({
+    id: uid('petty'),
+    name,
+    custodian: valueOf('pettyCustodian'),
+    startingBalance: numberOf('pettyStarting'),
+    notes: valueOf('pettyNotes'),
+    createdAt: new Date().toISOString()
+  });
+  logAudit('ADD', 'Petty Fund', name, valueOf('pettyCustodian'));
+  clearFields(['pettyName','pettyCustodian','pettyStarting','pettyNotes']);
+  saveState();
+}
+
+function addPettyEntry(){
+  const date = valueOf('pettyEntryDate') || today();
+  if (!ensureUnlocked(date, 'add petty entry')) return;
+  const fundId = valueOf('pettyEntryFund');
+  const amount = numberOf('pettyEntryAmount');
+  if (!fundId || !amount) return alert('Fund and amount are required.');
+  state.pettyEntries.unshift({
+    id: uid('pettyEntry'),
+    date,
+    fundId,
+    type: valueOf('pettyEntryType'),
+    amount,
+    reference: valueOf('pettyEntryReference'),
+    remarks: valueOf('pettyEntryRemarks'),
+    createdAt: new Date().toISOString()
+  });
+  logAudit('ADD', 'Petty Entry', pettyName(fundId), `${valueOf('pettyEntryType')} ${peso(amount)}`);
+  clearFields(['pettyEntryAmount','pettyEntryReference','pettyEntryRemarks']);
+  saveState();
+}
+
+function addPayroll(){
+  const date = valueOf('payrollDate') || today();
+  if (!ensureUnlocked(date, 'add payroll')) return;
+  const employee = valueOf('payrollEmployee');
+  const net = numberOf('payrollNet');
+  if (!employee || !net) return alert('Employee and net pay are required.');
+  state.payroll.unshift({
+    id: uid('payroll'),
+    date,
+    period: valueOf('payrollPeriod'),
+    employee,
+    department: valueOf('payrollDept'),
+    gross: numberOf('payrollGross'),
+    deductions: numberOf('payrollDeductions'),
+    employerShare: numberOf('payrollEmployerShare'),
+    net,
+    status: valueOf('payrollStatus'),
+    remarks: valueOf('payrollRemarks'),
+    createdAt: new Date().toISOString()
+  });
+  logAudit('ADD', 'Payroll', employee, `${peso(net)} ${valueOf('payrollPeriod')}`);
+  clearFields(['payrollPeriod','payrollEmployee','payrollDept','payrollGross','payrollDeductions','payrollEmployerShare','payrollNet','payrollRemarks']);
+  saveState();
+}
+
+function lockPeriod(){
+  const month = valueOf('lockPeriodMonth');
+  if (!month) return alert('Choose a month to lock.');
+  if (state.periodLocks.some(x => x.month === month)) return alert('That month is already locked.');
+  state.periodLocks.unshift({
+    id: uid('lock'),
+    month,
+    reason: valueOf('lockReason'),
+    lockedBy: valueOf('lockBy'),
+    createdAt: new Date().toISOString()
+  });
+  logAudit('LOCK', 'Period', month, valueOf('lockReason'));
+  clearFields(['lockReason','lockBy']);
+  saveState();
+}
+function unlockPeriod(id){
+  const row = state.periodLocks.find(x => x.id === id);
+  if (!row) return;
+  if (!confirm('Unlock this period?')) return;
+  state.periodLocks = state.periodLocks.filter(x => x.id !== id);
+  logAudit('UNLOCK', 'Period', row.month, row.reason);
+  saveState();
+}
+
+function createLedgerFromCheck(check){
+  const exists = state.bankLedger.some(l => l.sourceType === 'Check' && l.sourceId === check.id);
+  if (exists) return;
+  state.bankLedger.unshift({
+    id: uid('ledger'),
+    date: check.clearDate || check.releaseDate || check.issueDate,
+    bankId: check.bankId,
+    type: 'Withdrawal',
+    reference: `Check ${check.checkNumber || ''}`.trim(),
+    inAmount: 0,
+    outAmount: check.amount,
+    sourceType: 'Check',
+    sourceId: check.id,
+    remarks: `Cleared check for ${check.payee || 'payee'}`
+  });
+}
+function updateCheckStatus(id, status){
+  const check = state.checks.find(c => c.id === id);
+  if (!check) return;
+  if (!ensureUnlocked(check.issueDate || today(), 'change check status')) return;
+  check.status = status;
+  if (status === 'Released' && !check.releaseDate) check.releaseDate = today();
+  if (status === 'Cleared') {
+    if (!check.releaseDate) check.releaseDate = today();
+    check.clearDate = today();
+    createLedgerFromCheck(check);
+  }
+  const payment = state.payments.find(p => p.id === check.paymentId);
+  if (payment) payment.status = status;
+  logAudit('STATUS', 'Check', check.checkNumber || check.id, status);
+  saveState();
+}
+
+
+// --- Calculations ------------------------------------------------------------------
+function getBillSettledAmount(id){
+  return round2(state.payments.filter(p => p.billId === id && ['Posted','Released','Cleared'].includes(p.status)).reduce((s,x) => s + (x.amount || 0), 0));
+}
+function getBillBalance(id){
+  const bill = state.bills.find(x => x.id === id);
+  if (!bill) return 0;
+  return round2(Math.max((bill.netPayable || 0) - getBillSettledAmount(id), 0));
+}
+function getBillDisplayStatus(bill){
+  const settled = getBillSettledAmount(bill.id);
+  if (bill.status === 'Void') return 'Void';
+  if (bill.status === 'Draft') return 'Draft';
+  if (settled <= 0) return 'Approved';
+  if (settled < (bill.netPayable || 0)) return 'Partially Paid';
+  return 'Paid';
+}
+function getBillingCollectedAmount(id){
+  return round2(state.receipts.filter(r => r.billingId === id && r.status === 'Posted').reduce((s,x) => s + (x.amount || 0), 0));
+}
+function getBillingBalance(id){
+  const billing = state.billings.find(x => x.id === id);
+  if (!billing) return 0;
+  return round2(Math.max((billing.netReceivable || 0) - getBillingCollectedAmount(id), 0));
+}
+function getBillingDisplayStatus(billing){
+  const collected = getBillingCollectedAmount(billing.id);
+  if (billing.status === 'Void') return 'Void';
+  if (billing.status === 'Draft') return 'Draft';
+  if (collected <= 0) return 'Approved';
+  if (collected < (billing.netReceivable || 0)) return 'Partially Collected';
+  return 'Collected';
+}
+function getPettySpentFor(fundId){
+  return round2(state.payments.filter(p => p.method === 'Petty Cash' && p.pettyFundId === fundId && p.status === 'Posted').reduce((s,x) => s + (x.amount || 0), 0));
+}
+function getPettyBalanceFor(fundId){
+  const fund = state.pettyFunds.find(f => f.id === fundId);
+  if (!fund) return 0;
+  const entries = state.pettyEntries.filter(e => e.fundId === fundId).reduce((s,x) => s + (x.amount || 0), 0);
+  return round2((fund.startingBalance || 0) + entries - getPettySpentFor(fundId));
+}
+function getBankBookBalanceFor(bankId){
+  const bank = state.bankAccounts.find(b => b.id === bankId);
+  if (!bank) return 0;
+  const ledger = state.bankLedger.filter(l => l.bankId === bankId).reduce((s,x) => s + (x.inAmount || 0) - (x.outAmount || 0), 0);
+  return round2((bank.startingBalance || 0) + ledger);
+}
+function getOutstandingChecksFor(bankId){
+  return round2(state.checks.filter(c => c.bankId === bankId && c.status === 'Released').reduce((s,x) => s + (x.amount || 0), 0));
+}
+function getPreparedChecksFor(bankId){
+  return round2(state.checks.filter(c => c.bankId === bankId && c.status === 'Prepared').reduce((s,x) => s + (x.amount || 0), 0));
+}
+function getTotalBankBookBalance(){ return round2(state.bankAccounts.reduce((s,b) => s + getBankBookBalanceFor(b.id), 0)); }
+function getTotalOutstandingChecks(){ return round2(state.checks.filter(c => c.status === 'Released').reduce((s,x) => s + (x.amount || 0), 0)); }
+function getTotalPettyCash(){ return round2(state.pettyFunds.reduce((s,f) => s + getPettyBalanceFor(f.id), 0)); }
+function getTotalAROutstanding(){
+  return round2(state.billings.filter(b => !['Draft','Void'].includes(b.status)).reduce((s,b) => s + getBillingBalance(b.id), 0));
+}
+function getTotalAPOutstanding(){
+  return round2(state.bills.filter(b => !['Draft','Void'].includes(b.status)).reduce((s,b) => s + getBillBalance(b.id), 0));
+}
+function getWeeklyApprovedBillsTotal(){
+  const now = new Date();
+  const start = new Date(now.getTime() - 6*24*60*60*1000).toISOString().slice(0,10);
+  const end = now.toISOString().slice(0,10);
+  return round2(state.bills.filter(b => b.date >= start && b.date <= end && getBillDisplayStatus(b) !== 'Draft' && getBillDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0));
+}
+function getCurrentYearPayrollTotal(){
+  const year = String(new Date().getFullYear());
+  return round2(state.payroll.filter(p => (p.date || '').startsWith(year) && p.status !== 'Draft').reduce((s,x) => s + (x.net || 0), 0));
+}
+function getLastReconciliation(bankId){
+  return [...state.reconciliations].filter(r => r.bankId === bankId).sort((a,b) => (b.date || '').localeCompare(a.date || ''))[0];
+}
+function getAPAgingSummary(){
+  const buckets = {'Current':0,'1-30':0,'31-60':0,'61-90':0,'91+':0};
+  state.bills.filter(b => !['Draft','Void'].includes(b.status)).forEach(b => {
+    const balance = getBillBalance(b.id);
+    if (balance <= 0) return;
+    const [key, amount] = bucketAmount(daysPastDue(b.dueDate), balance);
+    buckets[key] += amount;
+  });
+  return Object.entries(buckets).map(([label, amount]) => ({label, amount}));
+}
+function getARAgingSummary(){
+  const buckets = {'Current':0,'1-30':0,'31-60':0,'61-90':0,'91+':0};
+  state.billings.filter(b => !['Draft','Void'].includes(b.status)).forEach(b => {
+    const balance = getBillingBalance(b.id);
+    if (balance <= 0) return;
+    const [key, amount] = bucketAmount(daysPastDue(b.dueDate), balance);
+    buckets[key] += amount;
+  });
+  return Object.entries(buckets).map(([label, amount]) => ({label, amount}));
+}
+
+
+// --- Rendering ---------------------------------------------------------------------
+function renderAll(){
+  populateSelectors();
+  togglePaymentSourceFields();
+  toggleReceiptBankWrap();
+  renderDashboard();
+  renderProjects();
+  renderBills();
+  renderBillings();
+  renderPayments();
+  renderReceipts();
+  renderChecks();
+  renderBank();
+  renderPetty();
+  renderPayroll();
+  renderControls();
+  renderReports();
+  renderSupabasePlan();
+  renderCloudPanel();
+}
+
+function renderDashboard(){
+  const bankBook = getTotalBankBookBalance();
+  const outstanding = getTotalOutstandingChecks();
+  const available = bankBook - outstanding;
+  text('kpiBankBook', peso(bankBook));
+  text('kpiBankAvailable', peso(available));
+  text('kpiPettyCash', peso(getTotalPettyCash()));
+  text('kpiOutstandingChecks', peso(outstanding));
+  text('kpiAROutstanding', peso(getTotalAROutstanding()));
+  text('kpiAPOutstanding', peso(getTotalAPOutstanding()));
+  text('kpiWeeklyBills', peso(getWeeklyApprovedBillsTotal()));
+  text('kpiPayrollYear', peso(getCurrentYearPayrollTotal()));
+
+  const recentBills = [...state.bills].sort((a,b) => (b.date || '').localeCompare(a.date || '')).slice(0,6);
+  html('recentBillsTable', recentBills.length ? recentBills.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.supplier)}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillDisplayStatus(b))}</td><td>${peso(b.netPayable)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No bills yet.</td></tr>`);
+
+  const recentBillings = [...state.billings].sort((a,b) => (b.date || '').localeCompare(a.date || '')).slice(0,6);
+  html('recentBillingsTable', recentBillings.length ? recentBillings.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.client)}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillingDisplayStatus(b))}</td><td>${peso(b.netReceivable)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No billings yet.</td></tr>`);
+
+  html('dashboardAPAging', summaryList(getAPAgingSummary(), true));
+  html('dashboardARAging', summaryList(getARAgingSummary(), true));
+  html('dashboardLocks', state.periodLocks.length ? state.periodLocks.slice(0,8).map(x => summaryLine(x.month, `${x.reason || 'Locked'} | ${x.lockedBy || ''}`)).join('') : '<div class="muted">No locked periods.</div>');
+
+  const projectHealth = state.projects.map(p => {
+    const billed = state.billings.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netReceivable || 0), 0);
+    const bills = state.bills.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0);
+    return { label: `${p.code} - ${p.name}`, amount: billed - bills };
+  }).sort((a,b) => b.amount - a.amount).slice(0,8);
+  html('projectHealthSummary', projectHealth.length ? projectHealth.map(item => `<div style="padding:8px 0;border-bottom:1px solid rgba(148,163,184,.12);display:flex;justify-content:space-between;gap:12px;"><span>${escapeHtml(item.label)}</span><strong class="${item.amount >= 0 ? 'good':'bad'}">${peso(item.amount)}</strong></div>`).join('') : '<div class="muted">No projects yet.</div>');
+
+  html('dashboardAudit', state.auditLog.length ? state.auditLog.slice(0,8).map(a => summaryLine(`${a.action} ${a.entity}`, `${a.reference} | ${new Date(a.timestamp).toLocaleString()}`)).join('') : '<div class="muted">No audit entries yet.</div>');
+}
+
+function renderProjects(){
+  html('projectsTable', state.projects.length ? state.projects.map(p => {
+    const collected = state.billings.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + getBillingCollectedAmount(x.id), 0);
+    const bills = state.bills.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0);
+    const margin = collected - bills;
+    return `<tr>
+      <td>${escapeHtml(p.code)}</td>
+      <td><strong>${escapeHtml(p.name)}</strong><br><span class="muted">${escapeHtml(p.remarks || '')}</span></td>
+      <td>${escapeHtml(p.client || '')}</td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${peso(p.contractAmount)}</td>
+      <td>${peso(collected)}</td>
+      <td>${peso(bills)}</td>
+      <td><span class="${margin >= 0 ? 'good' : 'bad'}">${peso(margin)}</span></td>
+      <td><button class="danger" onclick="deleteProject('${p.id}')">Delete</button></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="9" class="muted">No projects yet.</td></tr>`);
+}
+
+function renderBills(){
+  const search = valueOf('billSearch').toLowerCase();
+  const filterStatus = valueOf('billFilterStatus');
+  const rows = state.bills.filter(b => {
+    const status = getBillDisplayStatus(b);
+    const hay = `${b.supplier} ${projectName(b.projectId)} ${b.reference || ''}`.toLowerCase();
+    if (search && !hay.includes(search)) return false;
+    if (filterStatus && status !== filterStatus) return false;
+    return true;
+  }).sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(b => {
+    const status = getBillDisplayStatus(b);
+    const balance = getBillBalance(b.id);
+    return `<tr>
+      <td>${escapeHtml(b.date)}</td>
+      <td>${escapeHtml(b.dueDate || '')}</td>
+      <td>${escapeHtml(b.supplier)}</td>
+      <td>${escapeHtml(projectName(b.projectId))}</td>
+      <td>${statusBadge(status)}</td>
+      <td>${peso(b.grossAmount)}</td>
+      <td>${peso(b.netPayable)}</td>
+      <td>${peso(balance)}</td>
+      <td>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          ${status === 'Draft' ? `<button class="success" onclick="approveBill('${b.id}')">Approve</button>` : ''}
+          ${status !== 'Void' ? `<button class="danger" onclick="voidBill('${b.id}')">Void</button>` : ''}
+          <button class="subtle" onclick="viewBillDetails('${b.id}')">Details</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  html('billsTable', rows || `<tr><td colspan="9" class="muted">No bills found.</td></tr>`);
+}
+
+function renderBillings(){
+  const search = valueOf('billingSearch').toLowerCase();
+  const filterStatus = valueOf('billingFilterStatus');
+  const rows = state.billings.filter(b => {
+    const status = getBillingDisplayStatus(b);
+    const hay = `${b.client} ${projectName(b.projectId)} ${b.reference || ''}`.toLowerCase();
+    if (search && !hay.includes(search)) return false;
+    if (filterStatus && status !== filterStatus) return false;
+    return true;
+  }).sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(b => {
+    const status = getBillingDisplayStatus(b);
+    const balance = getBillingBalance(b.id);
+    return `<tr>
+      <td>${escapeHtml(b.date)}</td>
+      <td>${escapeHtml(b.dueDate || '')}</td>
+      <td>${escapeHtml(b.client)}</td>
+      <td>${escapeHtml(projectName(b.projectId))}</td>
+      <td>${statusBadge(status)}</td>
+      <td>${peso(b.billedAmount)}</td>
+      <td>${peso(b.netReceivable)}</td>
+      <td>${peso(balance)}</td>
+      <td>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          ${status === 'Draft' ? `<button class="success" onclick="approveBilling('${b.id}')">Approve</button>` : ''}
+          ${status !== 'Void' ? `<button class="danger" onclick="voidBilling('${b.id}')">Void</button>` : ''}
+          <button class="subtle" onclick="viewBillingDetails('${b.id}')">Details</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  html('billingsTable', rows || `<tr><td colspan="9" class="muted">No billings found.</td></tr>`);
+}
+
+function renderPayments(){
+  html('paymentsTable', state.payments.length ? [...state.payments].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(p => `
+    <tr>
+      <td>${escapeHtml(p.date)}</td>
+      <td>${escapeHtml(billLabel(p.billId))}</td>
+      <td>${escapeHtml(p.method)}</td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${escapeHtml(p.reference || '')}</td>
+      <td>${peso(p.amount)}</td>
+      <td>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          ${p.method !== 'Check' && p.status === 'Pending' ? `<button class="success" onclick="postPayment('${p.id}')">Post</button>` : ''}
+          ${p.status !== 'Cancelled' ? `<button class="danger" onclick="cancelPayment('${p.id}')">Cancel</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="7" class="muted">No disbursements yet.</td></tr>`);
+}
+
+function renderReceipts(){
+  html('receiptsTable', state.receipts.length ? [...state.receipts].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(r => `
+    <tr>
+      <td>${escapeHtml(r.date)}</td>
+      <td>${escapeHtml(billingLabel(r.billingId))}</td>
+      <td>${escapeHtml(r.method)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${escapeHtml(r.reference || '')}</td>
+      <td>${peso(r.amount)}</td>
+      <td>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          ${r.status === 'Pending' ? `<button class="success" onclick="postReceipt('${r.id}')">Post</button>` : ''}
+          ${r.status !== 'Cancelled' ? `<button class="danger" onclick="cancelReceipt('${r.id}')">Cancel</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="7" class="muted">No receipts yet.</td></tr>`);
+}
+
+function renderChecks(){
+  html('checksTable', state.checks.length ? [...state.checks].sort((a,b) => (b.issueDate || '').localeCompare(a.issueDate || '')).map(c => `
+    <tr>
+      <td>${escapeHtml(c.checkNumber || '')}</td>
+      <td>${escapeHtml(bankName(c.bankId))}</td>
+      <td>${escapeHtml(c.payee || '')}</td>
+      <td>${escapeHtml(projectName(c.projectId))}</td>
+      <td>${escapeHtml(c.issueDate || '')}</td>
+      <td>${escapeHtml(c.releaseDate || '')}</td>
+      <td>${escapeHtml(c.clearDate || '')}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td>${peso(c.amount)}</td>
+      <td>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          ${c.status === 'Prepared' ? `<button class="warn" onclick="updateCheckStatus('${c.id}','Released')">Mark Released</button>` : ''}
+          ${c.status === 'Released' ? `<button class="success" onclick="updateCheckStatus('${c.id}','Cleared')">Mark Cleared</button>` : ''}
+          ${c.status !== 'Cancelled' ? `<button class="danger" onclick="cancelCheck('${c.id}')">Cancel</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="10" class="muted">No checks yet.</td></tr>`);
+}
+
+function renderBank(){
+  html('bankAccountsTable', state.bankAccounts.length ? state.bankAccounts.map(b => {
+    const book = getBankBookBalanceFor(b.id);
+    const outstanding = getOutstandingChecksFor(b.id);
+    const available = book - outstanding;
+    const lastRecon = getLastReconciliation(b.id);
+    const diff = lastRecon ? round2(lastRecon.statementBalance - book) : 0;
+    return `<tr>
+      <td>${escapeHtml(b.bankName)}</td>
+      <td>${escapeHtml(b.label)}</td>
+      <td>${peso(b.startingBalance)}</td>
+      <td>${peso(book)}</td>
+      <td>${peso(outstanding)}</td>
+      <td>${peso(available)}</td>
+      <td>${lastRecon ? `${escapeHtml(lastRecon.date)} | ${peso(lastRecon.statementBalance)}` : '—'}</td>
+      <td>${lastRecon ? `<span class="${Math.abs(diff) < 0.005 ? 'good' : 'warn-text'}">${peso(diff)}</span>` : '—'}</td>
+      <td><button class="danger" onclick="deleteBankAccount('${b.id}')">Delete</button></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="9" class="muted">No bank accounts yet.</td></tr>`);
+
+  html('bankLedgerTable', state.bankLedger.length ? [...state.bankLedger].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(l => `
+    <tr>
+      <td>${escapeHtml(l.date)}</td>
+      <td>${escapeHtml(bankName(l.bankId))}</td>
+      <td>${escapeHtml(l.type)}</td>
+      <td>${escapeHtml(l.reference || '')}</td>
+      <td>${peso(l.inAmount)}</td>
+      <td>${peso(l.outAmount)}</td>
+      <td>${escapeHtml(l.sourceType || '')}</td>
+      <td>${escapeHtml(l.remarks || '')}</td>
+    </tr>
+  `).join('') : `<tr><td colspan="8" class="muted">No bank ledger entries yet.</td></tr>`);
+}
+
+function renderPetty(){
+  html('pettyFundsTable', state.pettyFunds.length ? state.pettyFunds.map(f => {
+    const entries = state.pettyEntries.filter(e => e.fundId === f.id).reduce((s,x) => s + (x.amount || 0), 0);
+    const spent = getPettySpentFor(f.id);
+    const balance = getPettyBalanceFor(f.id);
+    return `<tr>
+      <td>${escapeHtml(f.name)}</td>
+      <td>${escapeHtml(f.custodian || '')}</td>
+      <td>${peso(f.startingBalance)}</td>
+      <td>${peso(entries)}</td>
+      <td>${peso(spent)}</td>
+      <td>${peso(balance)}</td>
+      <td><button class="danger" onclick="deletePettyFund('${f.id}')">Delete</button></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="7" class="muted">No petty funds yet.</td></tr>`);
+}
+
+function renderPayroll(){
+  html('payrollTable', state.payroll.length ? [...state.payroll].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(p => `
+    <tr>
+      <td>${escapeHtml(p.date)}</td>
+      <td>${escapeHtml(p.period || '')}</td>
+      <td>${escapeHtml(p.employee)}</td>
+      <td>${escapeHtml(p.department || '')}</td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${peso(p.gross)}</td>
+      <td>${peso(p.deductions)}</td>
+      <td>${peso(p.employerShare)}</td>
+      <td>${peso(p.net)}</td>
+      <td>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          ${p.status === 'Draft' ? `<button class="success" onclick="approvePayroll('${p.id}')">Approve</button>` : ''}
+          ${p.status !== 'Void' ? `<button class="danger" onclick="voidPayroll('${p.id}')">Void</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="10" class="muted">No payroll entries yet.</td></tr>`);
+}
+
+function renderControls(){
+  html('lockedPeriodsTable', state.periodLocks.length ? state.periodLocks.map(l => `
+    <tr>
+      <td>${escapeHtml(l.month)}</td>
+      <td>${escapeHtml(l.reason || '')}</td>
+      <td>${escapeHtml(l.lockedBy || '')}</td>
+      <td>${new Date(l.createdAt).toLocaleString()}</td>
+      <td><button class="danger" onclick="unlockPeriod('${l.id}')">Unlock</button></td>
+    </tr>
+  `).join('') : `<tr><td colspan="5" class="muted">No locked periods.</td></tr>`);
+
+  html('auditLogTable', state.auditLog.length ? state.auditLog.map(a => `
+    <tr>
+      <td>${new Date(a.timestamp).toLocaleString()}</td>
+      <td>${escapeHtml(a.action)}</td>
+      <td>${escapeHtml(a.entity)}</td>
+      <td>${escapeHtml(a.reference || '')}</td>
+      <td>${escapeHtml(a.details || '')}</td>
+    </tr>
+  `).join('') : `<tr><td colspan="5" class="muted">No audit log entries.</td></tr>`);
+}
+
+function renderReports(){
+  const start = valueOf('reportWeekStart');
+  const end = valueOf('reportWeekEnd');
+  const projectFilter = valueOf('reportProjectFilter');
+  const reportBills = state.bills.filter(b => {
+    const status = getBillDisplayStatus(b);
+    if (status === 'Draft' || status === 'Void') return false;
+    if (start && b.date < start) return false;
+    if (end && b.date > end) return false;
+    if (projectFilter && b.projectId !== projectFilter) return false;
+    return true;
+  }).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+
+  html('weeklyReportTable', reportBills.length ? reportBills.map(b => `<tr>
+    <td>${escapeHtml(b.date)}</td>
+    <td>${escapeHtml(b.supplier)}</td>
+    <td>${escapeHtml(projectName(b.projectId))}</td>
+    <td>${escapeHtml(b.category)}</td>
+    <td>${statusBadge(getBillDisplayStatus(b))}</td>
+    <td>${peso(b.netPayable)}</td>
+  </tr>`).join('') : `<tr><td colspan="6" class="muted">No approved bills in selected range.</td></tr>`);
+
+  const total = reportBills.reduce((s,x) => s + (x.netPayable || 0), 0);
+  text('weeklyReportTotals', `Range: ${start || '—'} to ${end || '—'} | Total approved bills: ${peso(total)}${projectFilter ? ' | Project: ' + projectName(projectFilter) : ' | All projects'}`);
+  text('printReportMeta', `Report Range: ${start || '—'} to ${end || '—'}${projectFilter ? ' | Project: ' + projectName(projectFilter) : ' | All Projects'}`);
+
+  const apDetail = state.bills.filter(b => !['Draft','Void'].includes(b.status) && getBillBalance(b.id) > 0)
+    .sort((a,b) => daysPastDue(b.dueDate) - daysPastDue(a.dueDate))
+    .map(b => summaryLine(`${b.supplier} | ${b.reference || '(no ref)'} | ${daysPastDue(b.dueDate)}d`, peso(getBillBalance(b.id)))).join('') || '<div class="muted">No AP balance outstanding.</div>';
+  const arDetail = state.billings.filter(b => !['Draft','Void'].includes(b.status) && getBillingBalance(b.id) > 0)
+    .sort((a,b) => daysPastDue(b.dueDate) - daysPastDue(a.dueDate))
+    .map(b => summaryLine(`${b.client} | ${b.reference || '(no ref)'} | ${daysPastDue(b.dueDate)}d`, peso(getBillingBalance(b.id)))).join('') || '<div class="muted">No AR balance outstanding.</div>';
+  html('apAgingDetail', apDetail);
+  html('arAgingDetail', arDetail);
+
+  const year = String(new Date().getFullYear());
+  const yearBillTotal = state.bills.filter(b => (b.date || '').startsWith(year) && getBillDisplayStatus(b) !== 'Draft' && getBillDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0);
+  const yearBillingTotal = state.billings.filter(b => (b.date || '').startsWith(year) && getBillingDisplayStatus(b) !== 'Draft' && getBillingDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netReceivable || 0), 0);
+  const yearCollected = state.receipts.filter(r => (r.date || '').startsWith(year) && r.status === 'Posted').reduce((s,x) => s + (x.amount || 0), 0);
+  const yearPaid = state.payments.filter(p => (p.date || '').startsWith(year) && ['Posted','Released','Cleared'].includes(p.status)).reduce((s,x) => s + (x.amount || 0), 0);
+  html('yearSummary', `
+    ${summaryLine('Current Year', year)}
+    ${summaryLine('Approved Billings', peso(yearBillingTotal))}
+    ${summaryLine('Collections Received', peso(yearCollected))}
+    ${summaryLine('Approved Bills', peso(yearBillTotal))}
+    ${summaryLine('Disbursements Settled', peso(yearPaid))}
+    ${summaryLine('AR Outstanding', peso(getTotalAROutstanding()))}
+    ${summaryLine('AP Outstanding', peso(getTotalAPOutstanding()))}
+  `);
+
+  const payrollTotal = state.payroll.filter(p => (p.date || '').startsWith(year) && p.status !== 'Draft' && p.status !== 'Void').reduce((s,x) => s + (x.net || 0), 0);
+  const payrollByDept = sumBy(state.payroll.filter(p => (p.date || '').startsWith(year) && p.status !== 'Draft' && p.status !== 'Void'), p => p.department || 'Unassigned', p => p.net || 0);
+  html('annualPayrollSummary', `${summaryLine('Net Payroll Total', peso(payrollTotal))}<div style="margin-top:8px;">${summaryList(payrollByDept, true)}</div>`);
+
+  const outstandingChecks = state.checks.filter(c => c.status === 'Released');
+  html('outstandingChecksSummary', outstandingChecks.length ? outstandingChecks.map(c => summaryLine(`${c.checkNumber || '(no #)'} | ${c.payee}`, `${peso(c.amount)} | ${bankName(c.bankId)}`)).join('') : '<div class="muted">No outstanding checks.</div>');
+
+  const supplierExposure = sumBy(state.bills.filter(b => !['Draft','Void'].includes(b.status) && getBillBalance(b.id) > 0), b => b.supplier || 'Unknown', b => getBillBalance(b.id)).slice(0,12);
+  html('supplierExposureSummary', summaryList(supplierExposure, true));
+}
+
+function renderSupabasePlan(){
+  html('supabasePlan', `
+    ${summaryLine('app_state', 'single-row JSON workspace used now for safe storage refactor')}
+    ${summaryLine('state_key = main', 'shared workspace key used by this file')}
+    ${summaryLine('payload', 'entire accountant-grade app state as jsonb')}
+    ${summaryLine('updated_at', 'last cloud save timestamp')}
+    ${summaryLine('Next phase later', 'split this into normalized tables after cloud storage is stable')}
+    ${summaryLine('Future normalized tables', 'projects, bills, billings, payments, receipts, checks, bank, petty, payroll, locks, audit')}
+  `);
+}
+
+
+// --- Approval / posting workflows --------------------------------------------------
+function approveBill(id){
+  const bill = state.bills.find(b => b.id === id);
+  if (!bill) return;
+  if (!ensureUnlocked(bill.date, 'approve bill')) return;
+  bill.status = 'Approved';
+  logAudit('APPROVE', 'Bill', bill.reference || bill.id, bill.supplier);
+  saveState();
+}
+function approveBilling(id){
+  const billing = state.billings.find(b => b.id === id);
+  if (!billing) return;
+  if (!ensureUnlocked(billing.date, 'approve billing')) return;
+  billing.status = 'Approved';
+  logAudit('APPROVE', 'Billing', billing.reference || billing.id, billing.client);
+  saveState();
+}
+function approvePayroll(id){
+  const p = state.payroll.find(x => x.id === id);
+  if (!p) return;
+  if (!ensureUnlocked(p.date, 'approve payroll')) return;
+  p.status = 'Approved';
+  logAudit('APPROVE', 'Payroll', p.employee, p.period);
+  saveState();
+}
+function voidBill(id){
+  const bill = state.bills.find(b => b.id === id);
+  if (!bill) return;
+  if (!ensureUnlocked(bill.date, 'void bill')) return;
+  const settled = getBillSettledAmount(id);
+  if (settled > 0) return alert('Cannot void a bill with settled disbursements.');
+  if (!confirm('Void this bill?')) return;
+  bill.status = 'Void';
+  logAudit('VOID', 'Bill', bill.reference || bill.id, bill.supplier);
+  saveState();
+}
+function voidBilling(id){
+  const billing = state.billings.find(b => b.id === id);
+  if (!billing) return;
+  if (!ensureUnlocked(billing.date, 'void billing')) return;
+  const collected = getBillingCollectedAmount(id);
+  if (collected > 0) return alert('Cannot void a billing with posted receipts.');
+  if (!confirm('Void this billing?')) return;
+  billing.status = 'Void';
+  logAudit('VOID', 'Billing', billing.reference || billing.id, billing.client);
+  saveState();
+}
+function voidPayroll(id){
+  const p = state.payroll.find(x => x.id === id);
+  if (!p) return;
+  if (!ensureUnlocked(p.date, 'void payroll')) return;
+  if (!confirm('Void this payroll entry?')) return;
+  p.status = 'Void';
+  logAudit('VOID', 'Payroll', p.employee, p.period);
+  saveState();
+}
+function cancelPayment(id){
+  const payment = state.payments.find(p => p.id === id);
+  if (!payment) return;
+  if (!ensureUnlocked(payment.date, 'cancel disbursement')) return;
+  if (payment.status === 'Cancelled') return;
+  if (!confirm('Cancel this disbursement?')) return;
+  if (payment.method === 'Bank Transfer') {
+    state.bankLedger = state.bankLedger.filter(l => !(l.sourceType === 'Payment' && l.sourceId === payment.id));
+  }
+  if (payment.checkId) {
+    const check = state.checks.find(c => c.id === payment.checkId);
+    if (check) {
+      state.bankLedger = state.bankLedger.filter(l => !(l.sourceType === 'Check' && l.sourceId === check.id));
+      check.status = 'Cancelled';
+      logAudit('CANCEL', 'Check', check.checkNumber || check.id, 'From payment cancellation');
+    }
+  }
+  payment.status = 'Cancelled';
+  logAudit('CANCEL', 'Payment', payment.reference || payment.id, payment.method);
+  saveState();
+}
+function postPayment(id){
+  const payment = state.payments.find(p => p.id === id);
+  if (!payment) return;
+  if (!ensureUnlocked(payment.date, 'post disbursement')) return;
+  if (payment.status !== 'Pending') return;
+  payment.status = 'Posted';
+  if (payment.method === 'Bank Transfer') {
+    state.bankLedger.unshift({
+      id: uid('ledger'),
+      date: payment.date,
+      bankId: payment.bankId,
+      type: 'Withdrawal',
+      reference: payment.reference || `Payment ${billLabel(payment.billId)}`,
+      inAmount: 0,
+      outAmount: payment.amount,
+      sourceType: 'Payment',
+      sourceId: payment.id,
+      remarks: `Posted bank transfer`
+    });
+  }
+  logAudit('POST', 'Payment', payment.reference || payment.id, `${payment.method} ${peso(payment.amount)}`);
+  saveState();
+}
+function postReceipt(id){
+  const receipt = state.receipts.find(r => r.id === id);
+  if (!receipt) return;
+  if (!ensureUnlocked(receipt.date, 'post receipt')) return;
+  if (receipt.status !== 'Pending') return;
+  receipt.status = 'Posted';
+  if (receipt.method === 'Bank Deposit') {
+    state.bankLedger.unshift({
+      id: uid('ledger'),
+      date: receipt.date,
+      bankId: receipt.bankId,
+      type: 'Deposit',
+      reference: receipt.reference || `Receipt ${billingLabel(receipt.billingId)}`,
+      inAmount: receipt.amount,
+      outAmount: 0,
+      sourceType: 'Receipt',
+      sourceId: receipt.id,
+      remarks: `Posted bank deposit`
+    });
+  }
+  logAudit('POST', 'Receipt', receipt.reference || receipt.id, `${receipt.method} ${peso(receipt.amount)}`);
+  saveState();
+}
+function cancelReceipt(id){
+  const receipt = state.receipts.find(r => r.id === id);
+  if (!receipt) return;
+  if (!ensureUnlocked(receipt.date, 'cancel receipt')) return;
+  if (receipt.status === 'Cancelled') return;
+  if (!confirm('Cancel this receipt?')) return;
+  state.bankLedger = state.bankLedger.filter(l => !(l.sourceType === 'Receipt' && l.sourceId === receipt.id));
+  receipt.status = 'Cancelled';
+  logAudit('CANCEL', 'Receipt', receipt.reference || receipt.id, receipt.method);
+  saveState();
+}
+function cancelCheck(id){
+  const check = state.checks.find(c => c.id === id);
+  if (!check) return;
+  if (!ensureUnlocked(check.issueDate, 'cancel check')) return;
+  if (!confirm('Cancel this check?')) return;
+  check.status = 'Cancelled';
+  state.bankLedger = state.bankLedger.filter(l => !(l.sourceType === 'Check' && l.sourceId === check.id));
+  const payment = state.payments.find(p => p.id === check.paymentId);
+  if (payment) payment.status = 'Cancelled';
+  logAudit('CANCEL', 'Check', check.checkNumber || check.id, check.payee);
+  saveState();
+}
+
+
+// --- Detail views ------------------------------------------------------------------
+function viewBillDetails(id){
+  const b = state.bills.find(x => x.id === id);
+  if (!b) return;
+  const settled = getBillSettledAmount(id);
+  alert([
+    `Supplier: ${b.supplier}`,
+    `Reference: ${b.reference || ''}`,
+    `Base: ${peso(b.baseAmount)}`,
+    `VAT: ${peso(b.vatAmount)} (${b.vatRate}%)`,
+    `WHT: ${peso(b.whtAmount)} (${b.whtRate}%)`,
+    `Retention: ${peso(b.retentionAmount)}`,
+    `Gross: ${peso(b.grossAmount)}`,
+    `Net Payable: ${peso(b.netPayable)}`,
+    `Settled: ${peso(settled)}`,
+    `Balance: ${peso(getBillBalance(id))}`,
+    `Particulars: ${b.particulars || ''}`,
+    `Remarks: ${b.remarks || ''}`
+  ].join('\n'));
+}
+function viewBillingDetails(id){
+  const b = state.billings.find(x => x.id === id);
+  if (!b) return;
+  const collected = getBillingCollectedAmount(id);
+  alert([
+    `Client: ${b.client}`,
+    `Reference: ${b.reference || ''}`,
+    `Billed: ${peso(b.billedAmount)}`,
+    `Withholding: ${peso(b.withholdingAmount)}`,
+    `Retention: ${peso(b.retentionAmount)}`,
+    `Net Receivable: ${peso(b.netReceivable)}`,
+    `Collected: ${peso(collected)}`,
+    `Balance: ${peso(getBillingBalance(id))}`,
+    `Remarks: ${b.remarks || ''}`
+  ].join('\n'));
+}
+
+
+
+// --- Deletion / destructive actions ------------------------------------------------
+function deleteProject(id){
+  const used = state.bills.some(b => b.projectId === id) || state.billings.some(b => b.projectId === id) || state.checks.some(c => c.projectId === id);
+  if (used) return alert('Cannot delete project because it is already used in bills, billings, or checks.');
+  if (!confirm('Delete this project?')) return;
+  state.projects = state.projects.filter(x => x.id !== id);
+  logAudit('DELETE', 'Project', id, '');
+  saveState();
+}
+
+function deleteById(collectionName, id){
+  const row = state[collectionName].find(x => x.id === id);
+  if (!row) return;
+  const date = row.date || row.issueDate || row.createdAt || today();
+  if (!ensureUnlocked(date, 'delete record')) return;
+  if (!confirm('Delete this record?')) return;
+  state[collectionName] = state[collectionName].filter(x => x.id !== id);
+  logAudit('DELETE', collectionName, id, '');
+  saveState();
+}
+function deleteBankAccount(id){
+  const used = state.bankLedger.some(l => l.bankId === id) || state.checks.some(c => c.bankId === id) || state.payments.some(p => p.bankId === id) || state.receipts.some(r => r.bankId === id);
+  if (used) return alert('Cannot delete bank account because it is already used.');
+  if (!confirm('Delete this bank account?')) return;
+  state.bankAccounts = state.bankAccounts.filter(x => x.id !== id);
+  logAudit('DELETE', 'Bank Account', id, '');
+  saveState();
+}
+function deletePettyFund(id){
+  const used = state.pettyEntries.some(e => e.fundId === id) || state.payments.some(p => p.pettyFundId === id);
+  if (used) return alert('Cannot delete petty fund because it is already used.');
+  if (!confirm('Delete this petty fund?')) return;
+  state.pettyFunds = state.pettyFunds.filter(x => x.id !== id);
+  logAudit('DELETE', 'Petty Fund', id, '');
+  saveState();
+}
+
+
+// --- Backup / restore --------------------------------------------------------------
+function quickBackup(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `construction_finance_accountant_v2_${today()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 500);
+}
+function importBackup(event){
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = normalizeImportedState(JSON.parse(reader.result));
+      Object.keys(state).forEach(k => state[k] = imported[k]);
+      logAudit('IMPORT', 'Backup', file.name, 'Backup imported');
+      saveState();
+      alert('Backup imported successfully.');
+    } catch (e) {
+      alert('Invalid backup file.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+function clearAllData(){
+  if (!confirm('This will permanently clear all local data in this browser. Continue?')) return;
+  Object.keys(state).forEach(k => state[k] = []);
+  logAudit('CLEAR', 'System', '', 'All data cleared');
+  saveState();
+}
+function migrateLegacyData(showAlert = true){
+  for (const key of LEGACY_KEYS) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const oldData = JSON.parse(raw);
+      const empty = Object.values(state).every(arr => Array.isArray(arr) && arr.length === 0);
+      if (!empty) {
+        if (showAlert) alert(`Legacy data found in ${key}, but current app already has data. Migration skipped.`);
+        return;
+      }
+      if (oldData.projects) state.projects = arr(oldData.projects);
+      if (oldData.payroll) state.payroll = arr(oldData.payroll).map(p => ({...p, employerShare: p.employerShare || 0, status: p.status || 'Approved'}));
+      if (oldData.bankAccounts) state.bankAccounts = arr(oldData.bankAccounts);
+      if (oldData.bankLedger) state.bankLedger = arr(oldData.bankLedger);
+      if (oldData.pettyFunds) state.pettyFunds = arr(oldData.pettyFunds);
+      if (oldData.pettyEntries) state.pettyEntries = arr(oldData.pettyEntries);
+      if (oldData.checks) state.checks = arr(oldData.checks).map(c => ({...c, paymentId: c.paymentId || ''}));
+      if (oldData.expenses) {
+        state.bills = arr(oldData.expenses).map(e => {
+          const baseAmount = Number(e.amount || 0);
+          return {
+            id: e.id || uid('bill'),
+            date: e.date || today(),
+            dueDate: e.date || today(),
+            projectId: e.projectId || '',
+            supplier: e.payee || '',
+            category: e.category || 'Materials',
+            workType: e.workType || 'Construction',
+            reference: e.reference || '',
+            status: ['Unpaid',''].includes(e.paymentSource || '') ? 'Approved' : 'Approved',
+            baseAmount,
+            vatRate: 0,
+            vatAmount: 0,
+            whtRate: 0,
+            whtAmount: 0,
+            retentionAmount: 0,
+            grossAmount: baseAmount,
+            netPayable: baseAmount,
+            particulars: e.particulars || '',
+            remarks: e.remarks || '',
+            createdAt: e.createdAt || new Date().toISOString()
+          };
+        });
+      }
+      if (oldData.collections) {
+        state.billings = arr(oldData.collections).map(c => {
+          const billedAmount = Number(c.billed || c.collected || 0);
+          const netReceivable = billedAmount;
+          return {
+            id: c.id || uid('billing'),
+            date: c.date || today(),
+            dueDate: c.date || today(),
+            projectId: c.projectId || '',
+            client: c.client || '',
+            reference: c.reference || '',
+            status: c.status === 'Pending' ? 'Approved' : 'Approved',
+            billedAmount,
+            withholdingAmount: 0,
+            retentionAmount: 0,
+            netReceivable,
+            remarks: c.remarks || '',
+            createdAt: c.createdAt || new Date().toISOString()
+          };
+        });
+        state.receipts = arr(oldData.collections).filter(c => Number(c.collected || 0) > 0).map(c => ({
+          id: uid('receipt'),
+          date: c.date || today(),
+          billingId: c.id || '',
+          amount: Number(c.collected || 0),
+          method: c.depositedToBank ? 'Bank Deposit' : 'Cash',
+          bankId: c.depositBankId || '',
+          reference: c.reference || '',
+          status: 'Posted',
+          remarks: c.remarks || '',
+          createdAt: new Date().toISOString()
+        })).filter(r => state.billings.some(b => b.id === r.billingId));
+      }
+      state.periodLocks = [];
+      state.reconciliations = [];
+      state.auditLog = [];
+      logAudit('MIGRATE', 'Legacy', key, 'Legacy data migrated');
+      saveState();
+      if (showAlert) alert(`Legacy data migrated from ${key}.`);
+      return;
+    } catch (e) {}
+  }
+  if (showAlert) alert('No compatible legacy local data found.');
+}
+
+
+// --- Sample data / diagnostics -----------------------------------------------------
+function seedSampleData(){
+  if (!confirm('Load sample data?')) return;
+  if (Object.values(state).some(arr => Array.isArray(arr) && arr.length)) {
+    if (!confirm('There is already data. Add sample data anyway?')) return;
+  }
+
+  const project = { id: uid('project'), code: 'PRJ-001', name: 'Edifice Tower Renovation', client: 'Edifice Group', status: 'Ongoing', type: 'Construction', contractAmount: 2500000, remarks: 'Sample project' };
+  const office = { id: uid('project'), code: 'OFFICE', name: 'Office Operations', client: 'Internal', status: 'Ongoing', type: 'Office', contractAmount: 0, remarks: 'Office costs' };
+  const bank = { id: uid('bank'), bankName: 'BDO', label: 'Operating Account', startingBalance: 500000, accountNo: '****1234', createdAt: new Date().toISOString() };
+  const petty = { id: uid('petty'), name: 'Main Office Petty Cash', custodian: 'Cashier', startingBalance: 15000, notes: 'Sample', createdAt: new Date().toISOString() };
+  state.projects.unshift(office, project);
+  state.bankAccounts.unshift(bank);
+  state.pettyFunds.unshift(petty);
+
+  const bill1 = {
+    id: uid('bill'), date: today(), dueDate: today(), projectId: project.id, supplier: 'ABC Hardware',
+    category: 'Materials', workType: 'Construction', reference: 'INV-1001', status: 'Approved',
+    baseAmount: 22321.43, vatRate: 12, vatAmount: 2678.57, whtRate: 2, whtAmount: 446.43, retentionAmount: 0,
+    grossAmount: 25000, netPayable: 24553.57, particulars: 'Cement and sand', remarks: ''
+  };
+  const bill2 = {
+    id: uid('bill'), date: today(), dueDate: today(), projectId: office.id, supplier: 'Office Supply Co',
+    category: 'Admin', workType: 'Office', reference: 'INV-1002', status: 'Approved',
+    baseAmount: 1200, vatRate: 0, vatAmount: 0, whtRate: 0, whtAmount: 0, retentionAmount: 0,
+    grossAmount: 1200, netPayable: 1200, particulars: 'Printer ink and paper', remarks: ''
+  };
+  state.bills.unshift(bill2, bill1);
+
+  const billing1 = {
+    id: uid('billing'), date: today(), dueDate: today(), projectId: project.id, client: 'Edifice Group',
+    reference: 'SOA-001', status: 'Approved', billedAmount: 120000, withholdingAmount: 2400, retentionAmount: 6000, netReceivable: 111600, remarks: ''
+  };
+  state.billings.unshift(billing1);
+
+  const receipt1 = {
+    id: uid('receipt'), date: today(), billingId: billing1.id, amount: 50000, method: 'Bank Deposit',
+    bankId: bank.id, reference: 'DEP-001', status: 'Posted', remarks: '', createdAt: new Date().toISOString()
+  };
+  state.receipts.unshift(receipt1);
+  state.bankLedger.unshift({ id: uid('ledger'), date: today(), bankId: bank.id, type: 'Deposit', reference: 'DEP-001', inAmount: 50000, outAmount: 0, sourceType: 'Receipt', sourceId: receipt1.id, remarks: 'Sample collection deposit' });
+
+  const pay1 = { id: uid('payment'), date: today(), billId: bill1.id, method: 'Check', amount: 24553.57, bankId: bank.id, pettyFundId: '', reference: 'CV-001', status: 'Released', remarks: 'Sample check', checkId: '', createdAt: new Date().toISOString() };
+  state.payments.unshift(pay1);
+  const check1 = { id: uid('check'), paymentId: pay1.id, billId: bill1.id, checkNumber: '000123', bankId: bank.id, issueDate: today(), releaseDate: today(), clearDate: '', payee: 'ABC Hardware', projectId: bill1.projectId, amount: pay1.amount, status: 'Released', remarks: 'Sample' };
+  pay1.checkId = check1.id;
+  state.checks.unshift(check1);
+
+  const pay2 = { id: uid('payment'), date: today(), billId: bill2.id, method: 'Petty Cash', amount: 1200, bankId: '', pettyFundId: petty.id, reference: 'PCV-001', status: 'Posted', remarks: '', checkId: '', createdAt: new Date().toISOString() };
+  state.payments.unshift(pay2);
+  state.pettyEntries.unshift({ id: uid('pettyEntry'), date: today(), fundId: petty.id, type: 'Funding', amount: 5000, reference: 'Replenishment', remarks: '', createdAt: new Date().toISOString() });
+
+  state.payroll.unshift({ id: uid('payroll'), date: today(), period: 'Current Period', employee: 'Office Staff', department: 'Accounting', gross: 18000, deductions: 2000, employerShare: 1500, net: 16000, status: 'Approved', remarks: '', createdAt: new Date().toISOString() });
+
+  logAudit('SEED', 'Sample Data', 'Demo', 'Sample data loaded');
+  saveState();
+  alert('Sample data loaded.');
+}
+
+function printCurrentView(){ window.print(); }
+
+// --- Refactor surface / future-safe module map -------------------------------------
+// This pass keeps the existing HTML hooks and data shape intact while exposing
+// stable internal modules for future extraction into separate files.
+const AppUtils = {
+  uid, today, peso, valueOf, numberOf, text, html, escapeHtml, clearFields,
+  getMonthKey, isLocked, ensureUnlocked, statusBadge, summaryLine, summaryList,
+  daysPastDue, bucketAmount, sumBy, round2, arr, resetOptions, projectName,
+  bankName, pettyName, billLabel, billingLabel
+};
+
+const AppStore = {
+  loadState, saveState, normalizeImportedState, quickBackup, importBackup,
+  clearAllData, migrateLegacyData
+};
+
+const AppCalc = {
+  getBillSettledAmount, getBillBalance, getBillDisplayStatus,
+  getBillingCollectedAmount, getBillingBalance, getBillingDisplayStatus,
+  getPettySpentFor, getPettyBalanceFor, getBankBookBalanceFor,
+  getOutstandingChecksFor, getPreparedChecksFor, getTotalBankBookBalance,
+  getTotalOutstandingChecks, getTotalPettyCash, getTotalAROutstanding,
+  getTotalAPOutstanding, getWeeklyApprovedBillsTotal, getCurrentYearPayrollTotal,
+  getLastReconciliation, getAPAgingSummary, getARAgingSummary
+};
+
+const AppRender = {
+  renderAll, renderDashboard, renderProjects, renderBills, renderBillings,
+  renderPayments, renderReceipts, renderChecks, renderBank, renderPetty,
+  renderPayroll, renderControls, renderReports, renderSupabasePlan,
+  populateSelectors, showView, togglePaymentSourceFields, toggleReceiptBankWrap
+};
+
+const AppActions = {
+  addProject, addBill, addBilling, addPayment, addReceipt, addBankAccount,
+  addBankEntry, addReconciliation, addPettyFund, addPettyEntry, addPayroll,
+  lockPeriod, unlockPeriod, updateCheckStatus, approveBill, approveBilling,
+  approvePayroll, voidBill, voidBilling, voidPayroll, cancelPayment,
+  postPayment, postReceipt, cancelReceipt, cancelCheck, deleteProject,
+  deleteById, deleteBankAccount, deletePettyFund, viewBillDetails,
+  viewBillingDetails, seedSampleData
+};
+
+window.App = {
+  config: AppConfig,
+  state,
+  init: initApp,
+  utils: AppUtils,
+  store: AppStore,
+  calc: AppCalc,
+  render: AppRender,
+  actions: AppActions
+};
+
+</script>
+</body>
+</html>
