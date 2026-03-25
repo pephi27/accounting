@@ -142,10 +142,11 @@
     <div class="nav">
       <button class="active" data-view="dashboard">Dashboard</button>
       <button data-view="projects">Projects</button>
-      <button data-view="bills">AP Bills / Expenses</button>
-      <button data-view="billings">AR Billings / Collections</button>
+      <button data-view="suppliers">Suppliers</button>
+      <button data-view="bills">Expenses</button>
+      <button data-view="billings">Collections</button>
       <button data-view="payments">Disbursements</button>
-      <button data-view="receipts">Receipts</button>
+      <button data-view="receipts" class="hidden">Receipts</button>
       <button data-view="checks">Checks</button>
       <button data-view="bank">Bank</button>
       <button data-view="petty">Petty Cash</button>
@@ -200,8 +201,8 @@
           <div class="scroll-x"><table><thead><tr><th>Date</th><th>Supplier</th><th>Project</th><th>Status</th><th>Net Payable</th></tr></thead><tbody id="recentBillsTable"></tbody></table></div>
         </div>
         <div class="panel">
-          <h3>Recent Billings</h3>
-          <div class="scroll-x"><table><thead><tr><th>Date</th><th>Client</th><th>Project</th><th>Status</th><th>Net Receivable</th></tr></thead><tbody id="recentBillingsTable"></tbody></table></div>
+          <h3>Recent Collections</h3>
+          <div class="scroll-x"><table><thead><tr><th>Date</th><th>Method</th><th>Project</th><th>Status</th><th>Net Received</th></tr></thead><tbody id="recentBillingsTable"></tbody></table></div>
         </div>
       </div>
 
@@ -237,79 +238,103 @@
       </div>
     </section>
 
-    <section id="view-bills" class="view hidden">
+    <section id="view-suppliers" class="view hidden">
       <div class="panel no-print">
-        <h2>Record AP Bill / Expense</h2>
+        <h2>Supplier Master</h2>
         <div class="form-grid">
-          <div><label>Bill Date</label><input id="billDate" type="date"></div>
-          <div><label>Due Date</label><input id="billDueDate" type="date"></div>
-          <div><label>Project</label><select id="billProject"></select></div>
-          <div><label>Supplier / Payee</label><input id="billSupplier" placeholder="Supplier name"></div>
-
-          <div><label>Category</label><select id="billCategory"><option>Materials</option><option>Overhead</option><option>Labor</option><option>Admin</option></select></div>
-          <div><label>Work Type</label><select id="billWorkType"><option>Construction</option><option>Electrical</option><option>Plumbing</option><option>Design</option><option>Office</option></select></div>
-          <div><label>Reference No.</label><input id="billReference" placeholder="Invoice / CV / DR / OR"></div>
-          <div><label>Status</label><select id="billStatus"><option>Draft</option><option>Approved</option></select></div>
-
-          <div><label>Base Amount</label><input id="billBaseAmount" type="number" step="0.01" placeholder="0.00" oninput="previewBillAmounts()"></div>
-          <div><label>VAT Rate %</label><input id="billVatRate" type="number" step="0.01" placeholder="12" value="12" oninput="previewBillAmounts()"></div>
-          <div><label>WHT Rate %</label><input id="billWhtRate" type="number" step="0.01" placeholder="0" value="0" oninput="previewBillAmounts()"></div>
-          <div><label>Retention Amount</label><input id="billRetentionAmount" type="number" step="0.01" placeholder="0.00" value="0" oninput="previewBillAmounts()"></div>
-
-          <div><label>VAT Amount</label><input id="billVatAmount" type="number" step="0.01" placeholder="0.00" readonly></div>
-          <div><label>WHT Amount</label><input id="billWhtAmount" type="number" step="0.01" placeholder="0.00" readonly></div>
-          <div><label>Gross Amount</label><input id="billGrossAmount" type="number" step="0.01" placeholder="0.00" readonly></div>
-          <div><label>Net Payable</label><input id="billNetPayable" type="number" step="0.01" placeholder="0.00" readonly></div>
-
-          <div class="span-4"><label>Particulars</label><textarea id="billParticulars" rows="2" placeholder="What was billed or purchased"></textarea></div>
-          <div class="span-4"><label>Remarks</label><input id="billRemarks" placeholder="Optional notes"></div>
+          <div><label>Supplier Name</label><input id="supplierName" placeholder="Supplier name"></div>
+          <div><label>Contact Person</label><input id="supplierContact" placeholder="Optional contact"></div>
+          <div><label>Phone</label><input id="supplierPhone" placeholder="Optional phone"></div>
+          <div><label>TIN</label><input id="supplierTin" placeholder="Optional TIN"></div>
+          <div class="span-4"><label>Remarks</label><input id="supplierRemarks" placeholder="Optional notes"></div>
         </div>
         <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="primary" onclick="addBill()">Add Bill</button>
-          <span class="muted">Bills can be recorded first and paid later through Disbursements.</span>
+          <button class="primary" onclick="addSupplier()">Add Supplier</button>
+          <span class="muted">Add suppliers here once, then choose them from the Expense dropdown.</span>
         </div>
       </div>
       <div class="panel">
         <div class="section-head">
-          <h2>AP Bills Register</h2>
+          <h2>Suppliers</h2>
           <div class="toolbar no-print">
-            <input id="billSearch" placeholder="Search supplier, project, reference" oninput="renderBills()">
-            <select id="billFilterStatus" onchange="renderBills()"><option value="">All Statuses</option><option>Draft</option><option>Approved</option><option>Partially Paid</option><option>Paid</option><option>Void</option></select>
+            <input id="supplierSearch" placeholder="Search supplier, contact, phone, TIN" oninput="renderSuppliers()">
           </div>
         </div>
-        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Due</th><th>Supplier</th><th>Project</th><th>Status</th><th>Gross</th><th>Net Payable</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="billsTable"></tbody></table></div>
+        <div class="scroll-x"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Phone</th><th>TIN</th><th>Remarks</th><th>Actions</th></tr></thead><tbody id="suppliersTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="view-bills" class="view hidden">
+      <div class="panel no-print">
+        <h2>Record Expense</h2>
+        <div class="form-grid">
+          <div><label>Date</label><input id="billDate" type="date"></div>
+          <div><label>Project</label><select id="billProject"></select></div>
+          <div><label>Supplier</label><select id="billSupplier"></select></div>
+          <div><label>Category</label><select id="billCategory"><option>Materials</option><option>Labor</option><option>Overhead</option><option>Admin</option><option>Equipment</option><option>Subcon</option></select></div>
+
+          <div><label>Work Type</label><select id="billWorkType"><option>Civil</option><option>Structural</option><option>Architectural</option><option>Electrical</option><option>Plumbing</option><option>Mechanical</option><option>Finishing</option><option>Office</option><option>Other</option></select></div>
+          <div><label>Document Type</label><select id="billDocType"><option>Invoice</option><option>DR</option><option>OR</option><option>CR</option></select></div>
+          <div><label>Reference No.</label><input id="billReference" placeholder="Reference number"></div>
+          <div><label>Status</label><select id="billStatus"><option>Pending</option><option>Cancelled</option></select></div>
+
+          <div><label>Amount</label><input id="billAmount" type="number" step="0.01" placeholder="0.00" oninput="previewBillAmounts()"></div>
+          <div>
+            <label>With VAT 12%</label>
+            <div style="display:flex; align-items:center; gap:10px; min-height:42px; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#0b1220;">
+              <input id="billWithVat" type="checkbox" onchange="previewBillAmounts()">
+              <span class="muted">Check if amount already includes 12% VAT</span>
+            </div>
+          </div>
+          <div><label>VAT Amount</label><input id="billVatAmount" readonly></div>
+          <div><label>Net Amount</label><input id="billNetAmount" readonly></div>
+
+          <div class="span-4"><label>Remarks</label><input id="billRemarks" placeholder="Optional notes"></div>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="primary" onclick="addBill()">Add Expense</button>
+          <span class="muted">This screen is for detailed expense recording. Use Payments Made only when the expense is actually paid.</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-head">
+          <h2>Expense Register</h2>
+          <div class="toolbar no-print">
+            <input id="billSearch" placeholder="Search supplier, project, reference" oninput="renderBills()">
+            <select id="billFilterStatus" onchange="renderBills()"><option value="">All Statuses</option><option>Pending</option><option>Partial</option><option>Paid</option><option>Cancelled</option></select>
+          </div>
+        </div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Project</th><th>Supplier</th><th>Category</th><th>Work Type</th><th>Doc</th><th>Ref No.</th><th>Status</th><th>Amount</th><th>VAT</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="billsTable"></tbody></table></div>
       </div>
     </section>
 
     <section id="view-billings" class="view hidden">
       <div class="panel no-print">
-        <h2>Record AR Billing / Collection Claim</h2>
+        <h2>Record Collection</h2>
         <div class="form-grid">
-          <div><label>Billing Date</label><input id="billingDate" type="date"></div>
-          <div><label>Due Date</label><input id="billingDueDate" type="date"></div>
+          <div><label>Date Received</label><input id="billingDate" type="date"></div>
           <div><label>Project</label><select id="billingProject"></select></div>
-          <div><label>Client</label><input id="billingClient" placeholder="Client name"></div>
+          <div><label>Payment Method</label><select id="billingMethod"><option>Check</option><option>GCash</option><option>Online Bank Transfer</option><option>Cash</option></select></div>
+          <div><label>Status</label><select id="billingStatus"><option>Received</option><option>Cleared</option><option>Cancelled</option></select></div>
 
-          <div><label>Reference</label><input id="billingReference" placeholder="Billing / SOA / Invoice No."></div>
-          <div><label>Status</label><select id="billingStatus"><option>Draft</option><option>Approved</option></select></div>
-          <div><label>Billed Amount</label><input id="billingAmount" type="number" step="0.01" placeholder="0.00" oninput="previewBillingAmounts()"></div>
+          <div><label>Collected Amount</label><input id="billingAmount" type="number" step="0.01" placeholder="0.00" oninput="previewBillingAmounts()"></div>
           <div><label>Withholding Amount</label><input id="billingWhtAmount" type="number" step="0.01" placeholder="0.00" value="0" oninput="previewBillingAmounts()"></div>
-
           <div><label>Retention Amount</label><input id="billingRetentionAmount" type="number" step="0.01" placeholder="0.00" value="0" oninput="previewBillingAmounts()"></div>
           <div><label>Net Receivable</label><input id="billingNetReceivable" type="number" step="0.01" placeholder="0.00" readonly></div>
-          <div class="span-2"><label>Remarks</label><input id="billingRemarks" placeholder="Optional notes"></div>
+
+          <div class="span-4"><label>Remarks</label><input id="billingRemarks" placeholder="Optional notes"></div>
         </div>
-        <div style="margin-top:12px;"><button class="primary" onclick="addBilling()">Add Billing</button></div>
+        <div style="margin-top:12px;"><button class="primary" onclick="addBilling()">Add Collection</button></div>
       </div>
       <div class="panel">
         <div class="section-head">
-          <h2>AR Billings Register</h2>
+          <h2>Collections Register</h2>
           <div class="toolbar no-print">
-            <input id="billingSearch" placeholder="Search client, project, reference" oninput="renderBillings()">
-            <select id="billingFilterStatus" onchange="renderBillings()"><option value="">All Statuses</option><option>Draft</option><option>Approved</option><option>Partially Collected</option><option>Collected</option><option>Void</option></select>
+            <input id="billingSearch" placeholder="Search project, method, remarks" oninput="renderBillings()">
+            <select id="billingFilterStatus" onchange="renderBillings()"><option value="">All Statuses</option><option>Received</option><option>Cleared</option><option>Cancelled</option></select>
           </div>
         </div>
-        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Due</th><th>Client</th><th>Project</th><th>Status</th><th>Billed</th><th>Net Receivable</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="billingsTable"></tbody></table></div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Project</th><th>Method</th><th>Status</th><th>Collected</th><th>Withholding</th><th>Retention</th><th>Net Receivable</th><th>Remarks</th><th>Actions</th></tr></thead><tbody id="billingsTable"></tbody></table></div>
       </div>
     </section>
 
@@ -318,7 +343,7 @@
         <h2>Record Disbursement</h2>
         <div class="form-grid">
           <div><label>Payment Date</label><input id="paymentDate" type="date"></div>
-          <div><label>Bill</label><select id="paymentBill"></select></div>
+          <div><label>Expense</label><select id="paymentBill"></select></div>
           <div><label>Method</label><select id="paymentMethod" onchange="togglePaymentSourceFields()"><option>Bank Transfer</option><option>Check</option><option>Petty Cash</option><option>Cash</option></select></div>
           <div><label>Amount</label><input id="paymentAmount" type="number" step="0.01" placeholder="0.00"></div>
 
@@ -332,11 +357,11 @@
           <div class="span-2"><label>Remarks</label><input id="paymentRemarks" placeholder="Optional notes"></div>
         </div>
         <div style="margin-top:12px;">
-          <button class="primary" onclick="addPayment()">Add Disbursement</button>
+          <button class="primary" onclick="addPayment()">Add Payment</button>
         </div>
       </div>
       <div class="panel">
-        <div class="section-head"><h2>Disbursements Register</h2><div class="muted">Bank transfer and petty cash post immediately. Checks move from Prepared → Released → Cleared.</div></div>
+        <div class="section-head"><h2>Payments Made Register</h2><div class="muted">Bank transfer and petty cash post immediately. Checks move from Prepared → Released → Cleared.</div></div>
         <div class="scroll-x"><table><thead><tr><th>Date</th><th>Bill</th><th>Method</th><th>Status</th><th>Reference</th><th>Amount</th><th>Actions</th></tr></thead><tbody id="paymentsTable"></tbody></table></div>
       </div>
     </section>
@@ -581,10 +606,11 @@ const AppConfig = {
   titles: {
     dashboard: ['Dashboard', 'Monitor cash, payables, receivables, controls, and bank exposure.'],
     projects: ['Projects', 'Project master list used across all bills, billings, receipts, and payments.'],
-    bills: ['AP Bills / Expenses', 'Record approved supplier bills first, then settle them with disbursements.'],
-    billings: ['AR Billings / Collections', 'Record billings first, then settle them with receipts.'],
-    payments: ['Disbursements', 'Post bank transfers, petty cash payments, cash, and checks against bills.'],
-    receipts: ['Receipts', 'Record collections received and optionally deposit them to bank.'],
+    suppliers: ['Suppliers', 'Maintain a supplier master so Expenses can use a dropdown instead of manual typing.'],
+    bills: ['Expenses', 'Record detailed expense entries, then settle them through Payments Made when needed.'],
+    billings: ['Collections', 'Record actual money received by check, GCash, online bank transfer, or cash.'],
+    payments: ['Payments Made', 'Record actual payments by bank, petty cash, cash, or check against expenses.'],
+    receipts: ['Receipts', 'Legacy receipts view is hidden in the simplified setup.'],
     checks: ['Checks', 'Track check lifecycle from prepared to released to cleared.'],
     bank: ['Bank', 'Manage bank accounts, ledger, and reconciliation snapshots.'],
     petty: ['Petty Cash', 'Track petty funds, replenishments, and actual petty-cash spending.'],
@@ -620,6 +646,7 @@ async function initApp(){
   bindNavigation();
   setDefaultDates();
   hydrateFromLocal();
+  ensureSupplierMasterFromBills();
   populateSelectors();
   renderAll();
   showView('dashboard');
@@ -646,6 +673,7 @@ function loadLocalState() {
 function normalizeImportedState(input) {
   return {
     projects: arr(input.projects),
+    suppliers: arr(input.suppliers),
     bills: arr(input.bills),
     billings: arr(input.billings),
     payments: arr(input.payments),
@@ -945,14 +973,18 @@ function populateSelectors(){
     state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.code)} - ${escapeHtml(p.name)}</option>`)
   ).join('');
   ['billProject','billingProject'].forEach(id => resetOptions(id, projectOptions));
+  const supplierOptions = ['<option value="">Select Supplier</option>'].concat(
+    getSupplierMasterList().map(s => `<option value="${escapeHtml(s.name)}">${escapeHtml(s.name)}</option>`)
+  ).join('');
+  resetOptions('billSupplier', supplierOptions);
   const reportProjectOptions = ['<option value="">All Projects</option>'].concat(
     state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.code)} - ${escapeHtml(p.name)}</option>`)
   ).join('');
   resetOptions('reportProjectFilter', reportProjectOptions);
 
   const billOptions = ['<option value="">Select Approved/Open Bill</option>'].concat(
-    state.bills.filter(b => getBillBalance(b.id) > 0 && !['Void'].includes(getBillDisplayStatus(b)))
-      .map(b => `<option value="${escapeHtml(b.id)}">${escapeHtml(b.reference || b.supplier || b.id)} | ${escapeHtml(projectName(b.projectId))} | Bal ${peso(getBillBalance(b.id))}</option>`)
+    state.bills.filter(b => getBillBalance(b.id) > 0 && getBillDisplayStatus(b) !== 'Cancelled')
+      .map(b => `<option value="${escapeHtml(b.id)}">${escapeHtml((b.docType || 'Expense') + ' ' + (b.reference || b.supplier || b.id))} | ${escapeHtml(projectName(b.projectId))} | Bal ${peso(getBillBalance(b.id))}</option>`)
   ).join('');
   resetOptions('paymentBill', billOptions);
 
@@ -995,26 +1027,64 @@ function pettyName(id){
 }
 function billLabel(id){
   const b = state.bills.find(x => x.id === id);
-  return b ? `${b.reference || '(no ref)'} | ${b.supplier}` : '—';
+  return b ? `${b.docType || 'Expense'} ${b.reference || '(no ref)'} | ${b.supplier}` : '—';
 }
 function billingLabel(id){
   const b = state.billings.find(x => x.id === id);
   return b ? `${b.reference || '(no ref)'} | ${b.client}` : '—';
 }
 
+function supplierKey(name){
+  return String(name || '').trim().toLowerCase();
+}
+function getSupplierMasterList(){
+  const merged = [];
+  const seen = new Set();
+  state.suppliers.forEach(supplier => {
+    const key = supplierKey(supplier.name);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    merged.push(supplier);
+  });
+  state.bills.forEach(bill => {
+    const name = String(bill.supplier || '').trim();
+    const key = supplierKey(name);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    merged.push({ id: uid('supplier_shadow'), name, contact: '', phone: '', tin: '', remarks: '', autoImported: true });
+  });
+  return merged.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+}
+function ensureSupplierMasterFromBills(){
+  const seen = new Set(state.suppliers.map(s => supplierKey(s.name)));
+  let changed = false;
+  state.bills.forEach(bill => {
+    const name = String(bill.supplier || '').trim();
+    const key = supplierKey(name);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    state.suppliers.push({
+      id: uid('supplier'),
+      name,
+      contact: '',
+      phone: '',
+      tin: '',
+      remarks: '',
+      autoImported: true,
+      createdAt: new Date().toISOString()
+    });
+    changed = true;
+  });
+  if (changed) persistLocalState();
+}
+
 function previewBillAmounts(){
-  const base = numberOf('billBaseAmount');
-  const vatRate = numberOf('billVatRate');
-  const whtRate = numberOf('billWhtRate');
-  const retention = numberOf('billRetentionAmount');
-  const vatAmount = round2(base * (vatRate / 100));
-  const whtAmount = round2(base * (whtRate / 100));
-  const gross = round2(base + vatAmount);
-  const net = round2(gross - whtAmount - retention);
-  document.getElementById('billVatAmount').value = vatAmount.toFixed(2);
-  document.getElementById('billWhtAmount').value = whtAmount.toFixed(2);
-  document.getElementById('billGrossAmount').value = gross.toFixed(2);
-  document.getElementById('billNetPayable').value = net.toFixed(2);
+  const gross = round2(numberOf('billAmount'));
+  const withVat = document.getElementById('billWithVat')?.checked;
+  const vatAmount = withVat ? round2(gross * (12 / 112)) : 0;
+  const netAmount = round2(gross - vatAmount);
+  document.getElementById('billVatAmount').value = vatAmount ? vatAmount.toFixed(2) : '0.00';
+  document.getElementById('billNetAmount').value = netAmount ? netAmount.toFixed(2) : '0.00';
 }
 function previewBillingAmounts(){
   const billed = numberOf('billingAmount');
@@ -1047,40 +1117,71 @@ function addProject(){
   showView('projects');
 }
 
+
+function addSupplier(){
+  const name = valueOf('supplierName');
+  if (!name) return alert('Supplier name is required.');
+  if (state.suppliers.some(s => supplierKey(s.name) === supplierKey(name))) {
+    return alert('That supplier already exists.');
+  }
+  state.suppliers.unshift({
+    id: uid('supplier'),
+    name,
+    contact: valueOf('supplierContact'),
+    phone: valueOf('supplierPhone'),
+    tin: valueOf('supplierTin'),
+    remarks: valueOf('supplierRemarks'),
+    autoImported: false,
+    createdAt: new Date().toISOString()
+  });
+  logAudit('ADD', 'Supplier', name, 'Supplier master updated');
+  clearFields(['supplierName','supplierContact','supplierPhone','supplierTin','supplierRemarks']);
+  saveState();
+  showView('suppliers');
+}
+
 function addBill(){
   const date = valueOf('billDate') || today();
-  if (!ensureUnlocked(date, 'add bill')) return;
+  if (!ensureUnlocked(date, 'add expense')) return;
   const projectId = valueOf('billProject');
   const supplier = valueOf('billSupplier');
-  const baseAmount = numberOf('billBaseAmount');
-  if (!projectId || !supplier || !baseAmount) return alert('Bill date, project, supplier, and base amount are required.');
+  const grossAmount = round2(numberOf('billAmount'));
+  if (!projectId || !supplier || !grossAmount) return alert('Date, project, supplier, and amount are required.');
+  const withVat = document.getElementById('billWithVat')?.checked;
+  const vatAmount = withVat ? round2(grossAmount * (12 / 112)) : 0;
+  const netAmount = round2(grossAmount - vatAmount);
+  const selectedStatus = valueOf('billStatus') || 'Pending';
+  const internalStatus = selectedStatus === 'Cancelled' ? 'Void' : 'Approved';
   const bill = {
     id: uid('bill'),
     date,
-    dueDate: valueOf('billDueDate'),
+    dueDate: '',
     projectId,
     supplier,
     category: valueOf('billCategory'),
     workType: valueOf('billWorkType'),
+    docType: valueOf('billDocType'),
     reference: valueOf('billReference'),
-    status: valueOf('billStatus'),
-    baseAmount,
-    vatRate: numberOf('billVatRate'),
-    vatAmount: round2(baseAmount * numberOf('billVatRate') / 100),
-    whtRate: numberOf('billWhtRate'),
-    whtAmount: round2(baseAmount * numberOf('billWhtRate') / 100),
-    retentionAmount: numberOf('billRetentionAmount'),
-    grossAmount: numberOf('billGrossAmount'),
-    netPayable: numberOf('billNetPayable'),
-    particulars: valueOf('billParticulars'),
+    status: internalStatus,
+    entryStatus: selectedStatus,
+    baseAmount: netAmount,
+    vatRate: withVat ? 12 : 0,
+    vatAmount,
+    whtRate: 0,
+    whtAmount: 0,
+    retentionAmount: 0,
+    grossAmount,
+    netPayable: grossAmount,
+    particulars: `${valueOf('billDocType')} ${valueOf('billReference')}`.trim(),
     remarks: valueOf('billRemarks'),
+    withVat: Boolean(withVat),
     createdAt: new Date().toISOString()
   };
   state.bills.unshift(bill);
-  logAudit('ADD', 'Bill', bill.reference || bill.id, `${supplier} ${peso(bill.netPayable)}`);
-  clearFields(['billSupplier','billReference','billBaseAmount','billRetentionAmount','billParticulars','billRemarks']);
-  document.getElementById('billVatRate').value = '12';
-  document.getElementById('billWhtRate').value = '0';
+  logAudit('ADD', 'Expense', bill.reference || bill.id, `${supplier} ${peso(bill.grossAmount)}`);
+  clearFields(['billSupplier','billReference','billAmount','billRemarks']);
+  const vatBox = document.getElementById('billWithVat');
+  if (vatBox) vatBox.checked = false;
   previewBillAmounts();
   saveState();
   showView('bills');
@@ -1088,29 +1189,33 @@ function addBill(){
 
 function addBilling(){
   const date = valueOf('billingDate') || today();
-  if (!ensureUnlocked(date, 'add billing')) return;
+  if (!ensureUnlocked(date, 'add collection')) return;
   const projectId = valueOf('billingProject');
-  const client = valueOf('billingClient');
-  const billedAmount = numberOf('billingAmount');
-  if (!projectId || !client || !billedAmount) return alert('Billing date, project, client, and billed amount are required.');
+  const collectedAmount = round2(numberOf('billingAmount'));
+  if (!projectId || !collectedAmount) return alert('Date, project, and collected amount are required.');
+  const project = state.projects.find(x => x.id === projectId);
+  const status = valueOf('billingStatus') || 'Received';
   const billing = {
     id: uid('billing'),
     date,
-    dueDate: valueOf('billingDueDate'),
+    dueDate: '',
     projectId,
-    client,
-    reference: valueOf('billingReference'),
-    status: valueOf('billingStatus'),
-    billedAmount,
-    withholdingAmount: numberOf('billingWhtAmount'),
-    retentionAmount: numberOf('billingRetentionAmount'),
-    netReceivable: numberOf('billingNetReceivable'),
+    client: project?.client || '',
+    reference: '',
+    method: valueOf('billingMethod'),
+    status,
+    billedAmount: collectedAmount,
+    collectedAmount,
+    withholdingAmount: round2(numberOf('billingWhtAmount')),
+    retentionAmount: round2(numberOf('billingRetentionAmount')),
+    netReceivable: round2(numberOf('billingNetReceivable')),
     remarks: valueOf('billingRemarks'),
+    directCollection: true,
     createdAt: new Date().toISOString()
   };
   state.billings.unshift(billing);
-  logAudit('ADD', 'Billing', billing.reference || billing.id, `${client} ${peso(billing.netReceivable)}`);
-  clearFields(['billingClient','billingReference','billingAmount','billingWhtAmount','billingRetentionAmount','billingRemarks']);
+  logAudit('ADD', 'Collection', billing.method || billing.id, `${projectName(projectId)} ${peso(billing.netReceivable)}`);
+  clearFields(['billingAmount','billingWhtAmount','billingRetentionAmount','billingRemarks']);
   previewBillingAmounts();
   saveState();
   showView('billings');
@@ -1144,7 +1249,7 @@ function addPayment(){
   const bill = state.bills.find(x => x.id === billId);
   if (!bill) return alert('Bill not found.');
   const displayStatus = getBillDisplayStatus(bill);
-  if (displayStatus === 'Draft') return alert('Approve the bill first before paying it.');
+  if (displayStatus === 'Cancelled') return alert('This expense is cancelled and cannot be paid.');
   const payment = {
     id: uid('payment'),
     date,
@@ -1440,25 +1545,35 @@ function getBillSettledAmount(id){
 function getBillBalance(id){
   const bill = state.bills.find(x => x.id === id);
   if (!bill) return 0;
-  return round2(Math.max((bill.netPayable || 0) - getBillSettledAmount(id), 0));
+  return round2(Math.max((bill.netPayable || bill.grossAmount || 0) - getBillSettledAmount(id), 0));
 }
 function getBillDisplayStatus(bill){
   const settled = getBillSettledAmount(bill.id);
-  if (bill.status === 'Void') return 'Void';
-  if (bill.status === 'Draft') return 'Draft';
-  if (settled <= 0) return 'Approved';
-  if (settled < (bill.netPayable || 0)) return 'Partially Paid';
+  const cancelled = ['Void','Cancelled'].includes(bill.status) || bill.entryStatus === 'Cancelled';
+  if (cancelled) return 'Cancelled';
+  const total = bill.netPayable || bill.grossAmount || 0;
+  if (settled <= 0) return 'Pending';
+  if (settled < total) return 'Partial';
   return 'Paid';
 }
 function getBillingCollectedAmount(id){
+  const billing = state.billings.find(x => x.id === id);
+  if (!billing) return 0;
+  if (billing.directCollection) {
+    return ['Cancelled','Void'].includes(billing.status) ? 0 : round2(billing.netReceivable || 0);
+  }
   return round2(state.receipts.filter(r => r.billingId === id && r.status === 'Posted').reduce((s,x) => s + (x.amount || 0), 0));
 }
 function getBillingBalance(id){
   const billing = state.billings.find(x => x.id === id);
   if (!billing) return 0;
+  if (billing.directCollection) return 0;
   return round2(Math.max((billing.netReceivable || 0) - getBillingCollectedAmount(id), 0));
 }
 function getBillingDisplayStatus(billing){
+  if (billing.directCollection) {
+    return billing.status || 'Received';
+  }
   const collected = getBillingCollectedAmount(billing.id);
   if (billing.status === 'Void') return 'Void';
   if (billing.status === 'Draft') return 'Draft';
@@ -1491,16 +1606,16 @@ function getTotalBankBookBalance(){ return round2(state.bankAccounts.reduce((s,b
 function getTotalOutstandingChecks(){ return round2(state.checks.filter(c => c.status === 'Released').reduce((s,x) => s + (x.amount || 0), 0)); }
 function getTotalPettyCash(){ return round2(state.pettyFunds.reduce((s,f) => s + getPettyBalanceFor(f.id), 0)); }
 function getTotalAROutstanding(){
-  return round2(state.billings.filter(b => !['Draft','Void'].includes(b.status)).reduce((s,b) => s + getBillingBalance(b.id), 0));
+  return round2(state.billings.filter(b => !b.directCollection && !['Draft','Void'].includes(b.status)).reduce((s,b) => s + getBillingBalance(b.id), 0));
 }
 function getTotalAPOutstanding(){
-  return round2(state.bills.filter(b => !['Draft','Void'].includes(b.status)).reduce((s,b) => s + getBillBalance(b.id), 0));
+  return round2(state.bills.filter(b => getBillDisplayStatus(b) !== 'Cancelled').reduce((s,b) => s + getBillBalance(b.id), 0));
 }
 function getWeeklyApprovedBillsTotal(){
   const now = new Date();
   const start = new Date(now.getTime() - 6*24*60*60*1000).toISOString().slice(0,10);
   const end = now.toISOString().slice(0,10);
-  return round2(state.bills.filter(b => b.date >= start && b.date <= end && getBillDisplayStatus(b) !== 'Draft' && getBillDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0));
+  return round2(state.bills.filter(b => b.date >= start && b.date <= end && getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.netPayable || x.grossAmount || 0), 0));
 }
 function getCurrentYearPayrollTotal(){
   const year = String(new Date().getFullYear());
@@ -1511,7 +1626,7 @@ function getLastReconciliation(bankId){
 }
 function getAPAgingSummary(){
   const buckets = {'Current':0,'1-30':0,'31-60':0,'61-90':0,'91+':0};
-  state.bills.filter(b => !['Draft','Void'].includes(b.status)).forEach(b => {
+  state.bills.filter(b => getBillDisplayStatus(b) !== 'Cancelled').forEach(b => {
     const balance = getBillBalance(b.id);
     if (balance <= 0) return;
     const [key, amount] = bucketAmount(daysPastDue(b.dueDate), balance);
@@ -1521,7 +1636,7 @@ function getAPAgingSummary(){
 }
 function getARAgingSummary(){
   const buckets = {'Current':0,'1-30':0,'31-60':0,'61-90':0,'91+':0};
-  state.billings.filter(b => !['Draft','Void'].includes(b.status)).forEach(b => {
+  state.billings.filter(b => !b.directCollection && !['Draft','Void'].includes(b.status)).forEach(b => {
     const balance = getBillingBalance(b.id);
     if (balance <= 0) return;
     const [key, amount] = bucketAmount(daysPastDue(b.dueDate), balance);
@@ -1538,6 +1653,7 @@ function renderAll(){
   toggleReceiptBankWrap();
   renderDashboard();
   renderProjects();
+  renderSuppliers();
   renderBills();
   renderBillings();
   renderPayments();
@@ -1566,10 +1682,10 @@ function renderDashboard(){
   text('kpiPayrollYear', peso(getCurrentYearPayrollTotal()));
 
   const recentBills = [...state.bills].sort((a,b) => (b.date || '').localeCompare(a.date || '')).slice(0,6);
-  html('recentBillsTable', recentBills.length ? recentBills.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.supplier)}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillDisplayStatus(b))}</td><td>${peso(b.netPayable)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No bills yet.</td></tr>`);
+  html('recentBillsTable', recentBills.length ? recentBills.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.supplier)}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillDisplayStatus(b))}</td><td>${peso(b.netPayable || b.grossAmount || 0)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No bills yet.</td></tr>`);
 
   const recentBillings = [...state.billings].sort((a,b) => (b.date || '').localeCompare(a.date || '')).slice(0,6);
-  html('recentBillingsTable', recentBillings.length ? recentBillings.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.client)}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillingDisplayStatus(b))}</td><td>${peso(b.netReceivable)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No billings yet.</td></tr>`);
+  html('recentBillingsTable', recentBillings.length ? recentBillings.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.method || b.client || '')}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillingDisplayStatus(b))}</td><td>${peso(b.netReceivable || 0)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No collections yet.</td></tr>`);
 
   html('dashboardAPAging', summaryList(getAPAgingSummary(), true));
   html('dashboardARAging', summaryList(getARAgingSummary(), true));
@@ -1577,7 +1693,7 @@ function renderDashboard(){
 
   const projectHealth = state.projects.map(p => {
     const billed = state.billings.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netReceivable || 0), 0);
-    const bills = state.bills.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0);
+    const bills = state.bills.filter(b => b.projectId === p.id && getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.netPayable || x.grossAmount || 0), 0);
     return { label: `${p.code} - ${p.name}`, amount: billed - bills };
   }).sort((a,b) => b.amount - a.amount).slice(0,8);
   html('projectHealthSummary', projectHealth.length ? projectHealth.map(item => `<div style="padding:8px 0;border-bottom:1px solid rgba(148,163,184,.12);display:flex;justify-content:space-between;gap:12px;"><span>${escapeHtml(item.label)}</span><strong class="${item.amount >= 0 ? 'good':'bad'}">${peso(item.amount)}</strong></div>`).join('') : '<div class="muted">No projects yet.</div>');
@@ -1588,7 +1704,7 @@ function renderDashboard(){
 function renderProjects(){
   html('projectsTable', state.projects.length ? state.projects.map(p => {
     const collected = state.billings.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + getBillingCollectedAmount(x.id), 0);
-    const bills = state.bills.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0);
+    const bills = state.bills.filter(b => b.projectId === p.id && getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.netPayable || x.grossAmount || 0), 0);
     const margin = collected - bills;
     return `<tr>
       <td>${escapeHtml(p.code)}</td>
@@ -1604,12 +1720,44 @@ function renderProjects(){
   }).join('') : `<tr><td colspan="9" class="muted">No projects yet.</td></tr>`);
 }
 
+
+function renderSuppliers(){
+  const search = (valueOf('supplierSearch') || '').toLowerCase();
+  const suppliers = getSupplierMasterList().filter(supplier => {
+    const hay = `${supplier.name || ''} ${supplier.contact || ''} ${supplier.phone || ''} ${supplier.tin || ''} ${supplier.remarks || ''}`.toLowerCase();
+    return !search || hay.includes(search);
+  });
+  html('suppliersTable', suppliers.length ? suppliers.map(supplier => {
+    const isUsed = state.bills.some(bill => supplierKey(bill.supplier) === supplierKey(supplier.name));
+    return `<tr>
+      <td><strong>${escapeHtml(supplier.name || '')}</strong></td>
+      <td>${escapeHtml(supplier.contact || '')}</td>
+      <td>${escapeHtml(supplier.phone || '')}</td>
+      <td>${escapeHtml(supplier.tin || '')}</td>
+      <td>${escapeHtml(supplier.remarks || '')}</td>
+      <td>${supplier.id && !String(supplier.id).startsWith('supplier_shadow') ? `<button class="danger" onclick="deleteSupplier('${supplier.id}')">${isUsed ? 'In Use' : 'Delete'}</button>` : '<span class="muted">From existing expenses</span>'}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" class="muted">No suppliers yet.</td></tr>');
+}
+
+function deleteSupplier(id){
+  const supplier = state.suppliers.find(s => s.id === id);
+  if (!supplier) return;
+  if (state.bills.some(bill => supplierKey(bill.supplier) === supplierKey(supplier.name))) {
+    return alert('Cannot delete this supplier because it is already used in expenses.');
+  }
+  if (!confirm('Delete this supplier?')) return;
+  state.suppliers = state.suppliers.filter(s => s.id !== id);
+  logAudit('DELETE', 'Supplier', supplier.name, 'Supplier removed from master');
+  saveState();
+}
+
 function renderBills(){
   const search = valueOf('billSearch').toLowerCase();
   const filterStatus = valueOf('billFilterStatus');
   const rows = state.bills.filter(b => {
     const status = getBillDisplayStatus(b);
-    const hay = `${b.supplier} ${projectName(b.projectId)} ${b.reference || ''}`.toLowerCase();
+    const hay = `${b.supplier} ${projectName(b.projectId)} ${b.reference || ''} ${b.docType || ''} ${b.category || ''} ${b.workType || ''}`.toLowerCase();
     if (search && !hay.includes(search)) return false;
     if (filterStatus && status !== filterStatus) return false;
     return true;
@@ -1618,23 +1766,25 @@ function renderBills(){
     const balance = getBillBalance(b.id);
     return `<tr>
       <td>${escapeHtml(b.date)}</td>
-      <td>${escapeHtml(b.dueDate || '')}</td>
-      <td>${escapeHtml(b.supplier)}</td>
       <td>${escapeHtml(projectName(b.projectId))}</td>
+      <td>${escapeHtml(b.supplier)}</td>
+      <td>${escapeHtml(b.category || '')}</td>
+      <td>${escapeHtml(b.workType || '')}</td>
+      <td>${escapeHtml(b.docType || '')}</td>
+      <td>${escapeHtml(b.reference || '')}</td>
       <td>${statusBadge(status)}</td>
-      <td>${peso(b.grossAmount)}</td>
-      <td>${peso(b.netPayable)}</td>
+      <td>${peso(b.grossAmount || 0)}</td>
+      <td>${b.withVat || (b.vatAmount || 0) > 0 ? peso(b.vatAmount || 0) : '—'}</td>
       <td>${peso(balance)}</td>
       <td>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          ${status === 'Draft' ? `<button class="success" onclick="approveBill('${b.id}')">Approve</button>` : ''}
-          ${status !== 'Void' ? `<button class="danger" onclick="voidBill('${b.id}')">Void</button>` : ''}
+          ${status !== 'Cancelled' ? `<button class="danger" onclick="voidBill('${b.id}')">Cancel</button>` : ''}
           <button class="subtle" onclick="viewBillDetails('${b.id}')">Details</button>
         </div>
       </td>
     </tr>`;
   }).join('');
-  html('billsTable', rows || `<tr><td colspan="9" class="muted">No bills found.</td></tr>`);
+  html('billsTable', rows || `<tr><td colspan="12" class="muted">No expenses found.</td></tr>`);
 }
 
 function renderBillings(){
@@ -1642,21 +1792,41 @@ function renderBillings(){
   const filterStatus = valueOf('billingFilterStatus');
   const rows = state.billings.filter(b => {
     const status = getBillingDisplayStatus(b);
-    const hay = `${b.client} ${projectName(b.projectId)} ${b.reference || ''}`.toLowerCase();
+    const hay = `${projectName(b.projectId)} ${b.method || ''} ${b.remarks || ''} ${b.client || ''}`.toLowerCase();
     if (search && !hay.includes(search)) return false;
     if (filterStatus && status !== filterStatus) return false;
     return true;
   }).sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(b => {
     const status = getBillingDisplayStatus(b);
+    if (b.directCollection) {
+      return `<tr>
+        <td>${escapeHtml(b.date)}</td>
+        <td>${escapeHtml(projectName(b.projectId))}</td>
+        <td>${escapeHtml(b.method || '')}</td>
+        <td>${statusBadge(status)}</td>
+        <td>${peso(b.collectedAmount || b.billedAmount || 0)}</td>
+        <td>${peso(b.withholdingAmount || 0)}</td>
+        <td>${peso(b.retentionAmount || 0)}</td>
+        <td>${peso(b.netReceivable || 0)}</td>
+        <td>${escapeHtml(b.remarks || '')}</td>
+        <td>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            ${status !== 'Cancelled' ? `<button class="danger" onclick="voidBilling('${b.id}')">Cancel</button>` : ''}
+            <button class="subtle" onclick="viewBillingDetails('${b.id}')">Details</button>
+          </div>
+        </td>
+      </tr>`;
+    }
     const balance = getBillingBalance(b.id);
     return `<tr>
       <td>${escapeHtml(b.date)}</td>
-      <td>${escapeHtml(b.dueDate || '')}</td>
-      <td>${escapeHtml(b.client)}</td>
       <td>${escapeHtml(projectName(b.projectId))}</td>
+      <td>${escapeHtml(b.client || '')}</td>
       <td>${statusBadge(status)}</td>
-      <td>${peso(b.billedAmount)}</td>
-      <td>${peso(b.netReceivable)}</td>
+      <td>${peso(b.billedAmount || 0)}</td>
+      <td>${peso(b.withholdingAmount || 0)}</td>
+      <td>${peso(b.retentionAmount || 0)}</td>
+      <td>${peso(b.netReceivable || 0)}</td>
       <td>${peso(balance)}</td>
       <td>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
@@ -1667,7 +1837,7 @@ function renderBillings(){
       </td>
     </tr>`;
   }).join('');
-  html('billingsTable', rows || `<tr><td colspan="9" class="muted">No billings found.</td></tr>`);
+  html('billingsTable', rows || `<tr><td colspan="10" class="muted">No collections found.</td></tr>`);
 }
 
 function renderPayments(){
@@ -1832,7 +2002,7 @@ function renderReports(){
   const projectFilter = valueOf('reportProjectFilter');
   const reportBills = state.bills.filter(b => {
     const status = getBillDisplayStatus(b);
-    if (status === 'Draft' || status === 'Void') return false;
+    if (status === 'Cancelled') return false;
     if (start && b.date < start) return false;
     if (end && b.date > end) return false;
     if (projectFilter && b.projectId !== projectFilter) return false;
@@ -1846,13 +2016,13 @@ function renderReports(){
     <td>${escapeHtml(b.category)}</td>
     <td>${statusBadge(getBillDisplayStatus(b))}</td>
     <td>${peso(b.netPayable)}</td>
-  </tr>`).join('') : `<tr><td colspan="6" class="muted">No approved bills in selected range.</td></tr>`);
+  </tr>`).join('') : `<tr><td colspan="6" class="muted">No expenses in selected range.</td></tr>`);
 
   const total = reportBills.reduce((s,x) => s + (x.netPayable || 0), 0);
-  text('weeklyReportTotals', `Range: ${start || '—'} to ${end || '—'} | Total approved bills: ${peso(total)}${projectFilter ? ' | Project: ' + projectName(projectFilter) : ' | All projects'}`);
+  text('weeklyReportTotals', `Range: ${start || '—'} to ${end || '—'} | Total expenses: ${peso(total)}${projectFilter ? ' | Project: ' + projectName(projectFilter) : ' | All projects'}`);
   text('printReportMeta', `Report Range: ${start || '—'} to ${end || '—'}${projectFilter ? ' | Project: ' + projectName(projectFilter) : ' | All Projects'}`);
 
-  const apDetail = state.bills.filter(b => !['Draft','Void'].includes(b.status) && getBillBalance(b.id) > 0)
+  const apDetail = state.bills.filter(b => getBillDisplayStatus(b) !== 'Cancelled' && getBillBalance(b.id) > 0)
     .sort((a,b) => daysPastDue(b.dueDate) - daysPastDue(a.dueDate))
     .map(b => summaryLine(`${b.supplier} | ${b.reference || '(no ref)'} | ${daysPastDue(b.dueDate)}d`, peso(getBillBalance(b.id)))).join('') || '<div class="muted">No AP balance outstanding.</div>';
   const arDetail = state.billings.filter(b => !['Draft','Void'].includes(b.status) && getBillingBalance(b.id) > 0)
@@ -1862,7 +2032,7 @@ function renderReports(){
   html('arAgingDetail', arDetail);
 
   const year = String(new Date().getFullYear());
-  const yearBillTotal = state.bills.filter(b => (b.date || '').startsWith(year) && getBillDisplayStatus(b) !== 'Draft' && getBillDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netPayable || 0), 0);
+  const yearBillTotal = state.bills.filter(b => (b.date || '').startsWith(year) && getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.netPayable || x.grossAmount || 0), 0);
   const yearBillingTotal = state.billings.filter(b => (b.date || '').startsWith(year) && getBillingDisplayStatus(b) !== 'Draft' && getBillingDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netReceivable || 0), 0);
   const yearCollected = state.receipts.filter(r => (r.date || '').startsWith(year) && r.status === 'Posted').reduce((s,x) => s + (x.amount || 0), 0);
   const yearPaid = state.payments.filter(p => (p.date || '').startsWith(year) && ['Posted','Released','Cleared'].includes(p.status)).reduce((s,x) => s + (x.amount || 0), 0);
@@ -1883,7 +2053,7 @@ function renderReports(){
   const outstandingChecks = state.checks.filter(c => c.status === 'Released');
   html('outstandingChecksSummary', outstandingChecks.length ? outstandingChecks.map(c => summaryLine(`${c.checkNumber || '(no #)'} | ${c.payee}`, `${peso(c.amount)} | ${bankName(c.bankId)}`)).join('') : '<div class="muted">No outstanding checks.</div>');
 
-  const supplierExposure = sumBy(state.bills.filter(b => !['Draft','Void'].includes(b.status) && getBillBalance(b.id) > 0), b => b.supplier || 'Unknown', b => getBillBalance(b.id)).slice(0,12);
+  const supplierExposure = sumBy(state.bills.filter(b => getBillDisplayStatus(b) !== 'Cancelled' && getBillBalance(b.id) > 0), b => b.supplier || 'Unknown', b => getBillBalance(b.id)).slice(0,12);
   html('supplierExposureSummary', summaryList(supplierExposure, true));
 }
 
@@ -1903,9 +2073,10 @@ function renderSupabasePlan(){
 function approveBill(id){
   const bill = state.bills.find(b => b.id === id);
   if (!bill) return;
-  if (!ensureUnlocked(bill.date, 'approve bill')) return;
+  if (!ensureUnlocked(bill.date, 'update expense')) return;
   bill.status = 'Approved';
-  logAudit('APPROVE', 'Bill', bill.reference || bill.id, bill.supplier);
+  bill.entryStatus = 'Pending';
+  logAudit('UPDATE', 'Expense', bill.reference || bill.id, bill.supplier);
   saveState();
 }
 function approveBilling(id){
@@ -1927,12 +2098,13 @@ function approvePayroll(id){
 function voidBill(id){
   const bill = state.bills.find(b => b.id === id);
   if (!bill) return;
-  if (!ensureUnlocked(bill.date, 'void bill')) return;
+  if (!ensureUnlocked(bill.date, 'cancel expense')) return;
   const settled = getBillSettledAmount(id);
-  if (settled > 0) return alert('Cannot void a bill with settled disbursements.');
-  if (!confirm('Void this bill?')) return;
+  if (settled > 0) return alert('Cannot cancel an expense that already has payments recorded.');
+  if (!confirm('Cancel this expense?')) return;
   bill.status = 'Void';
-  logAudit('VOID', 'Bill', bill.reference || bill.id, bill.supplier);
+  bill.entryStatus = 'Cancelled';
+  logAudit('CANCEL', 'Expense', bill.reference || bill.id, bill.supplier);
   saveState();
 }
 function voidBilling(id){
@@ -2053,23 +2225,41 @@ function viewBillDetails(id){
   if (!b) return;
   const settled = getBillSettledAmount(id);
   alert([
+    `Date: ${b.date || ''}`,
+    `Project: ${projectName(b.projectId)}`,
     `Supplier: ${b.supplier}`,
-    `Reference: ${b.reference || ''}`,
-    `Base: ${peso(b.baseAmount)}`,
-    `VAT: ${peso(b.vatAmount)} (${b.vatRate}%)`,
-    `WHT: ${peso(b.whtAmount)} (${b.whtRate}%)`,
-    `Retention: ${peso(b.retentionAmount)}`,
-    `Gross: ${peso(b.grossAmount)}`,
-    `Net Payable: ${peso(b.netPayable)}`,
-    `Settled: ${peso(settled)}`,
+    `Category: ${b.category || ''}`,
+    `Work Type: ${b.workType || ''}`,
+    `Document Type: ${b.docType || ''}`,
+    `Reference No.: ${b.reference || ''}`,
+    `Status: ${getBillDisplayStatus(b)}`,
+    `Amount: ${peso(b.grossAmount || 0)}`,
+    `With VAT: ${(b.withVat || (b.vatAmount || 0) > 0) ? 'Yes' : 'No'}`,
+    `VAT Amount: ${peso(b.vatAmount || 0)}`,
+    `Net Amount: ${peso(b.baseAmount || 0)}`,
+    `Paid / Settled: ${peso(settled)}`,
     `Balance: ${peso(getBillBalance(id))}`,
-    `Particulars: ${b.particulars || ''}`,
     `Remarks: ${b.remarks || ''}`
   ].join('\n'));
 }
 function viewBillingDetails(id){
   const b = state.billings.find(x => x.id === id);
   if (!b) return;
+  const status = getBillingDisplayStatus(b);
+  if (b.directCollection) {
+    alert([
+      `Date: ${b.date || ''}`,
+      `Project: ${projectName(b.projectId)}`,
+      `Method: ${b.method || ''}`,
+      `Status: ${status}`,
+      `Collected Amount: ${peso(b.collectedAmount || b.billedAmount || 0)}`,
+      `Withholding: ${peso(b.withholdingAmount || 0)}`,
+      `Retention: ${peso(b.retentionAmount || 0)}`,
+      `Net Receivable: ${peso(b.netReceivable || 0)}`,
+      `Remarks: ${b.remarks || ''}`
+    ].join('\n'));
+    return;
+  }
   const collected = getBillingCollectedAmount(id);
   alert([
     `Client: ${b.client}`,
@@ -2264,18 +2454,22 @@ function seedSampleData(){
   state.projects.unshift(office, project);
   state.bankAccounts.unshift(bank);
   state.pettyFunds.unshift(petty);
+  state.suppliers.unshift(
+    { id: uid('supplier'), name: 'Office Supply Co', contact: '', phone: '', tin: '', remarks: 'Sample supplier', autoImported: false, createdAt: new Date().toISOString() },
+    { id: uid('supplier'), name: 'ABC Hardware', contact: '', phone: '', tin: '', remarks: 'Sample supplier', autoImported: false, createdAt: new Date().toISOString() }
+  );
 
   const bill1 = {
     id: uid('bill'), date: today(), dueDate: today(), projectId: project.id, supplier: 'ABC Hardware',
-    category: 'Materials', workType: 'Construction', reference: 'INV-1001', status: 'Approved',
-    baseAmount: 22321.43, vatRate: 12, vatAmount: 2678.57, whtRate: 2, whtAmount: 446.43, retentionAmount: 0,
-    grossAmount: 25000, netPayable: 24553.57, particulars: 'Cement and sand', remarks: ''
+    category: 'Materials', workType: 'Civil', docType: 'Invoice', reference: 'INV-1001', status: 'Approved', entryStatus: 'Pending',
+    baseAmount: 22321.43, vatRate: 12, vatAmount: 2678.57, whtRate: 0, whtAmount: 0, retentionAmount: 0,
+    grossAmount: 25000, netPayable: 25000, particulars: 'Cement and sand', remarks: '', withVat: true
   };
   const bill2 = {
     id: uid('bill'), date: today(), dueDate: today(), projectId: office.id, supplier: 'Office Supply Co',
-    category: 'Admin', workType: 'Office', reference: 'INV-1002', status: 'Approved',
+    category: 'Admin', workType: 'Office', docType: 'Invoice', reference: 'INV-1002', status: 'Approved', entryStatus: 'Pending',
     baseAmount: 1200, vatRate: 0, vatAmount: 0, whtRate: 0, whtAmount: 0, retentionAmount: 0,
-    grossAmount: 1200, netPayable: 1200, particulars: 'Printer ink and paper', remarks: ''
+    grossAmount: 1200, netPayable: 1200, particulars: 'Printer ink and paper', remarks: '', withVat: false
   };
   state.bills.unshift(bill2, bill1);
 
@@ -2318,7 +2512,8 @@ const AppUtils = {
   uid, today, peso, valueOf, numberOf, text, html, escapeHtml, clearFields,
   getMonthKey, isLocked, ensureUnlocked, statusBadge, summaryLine, summaryList,
   daysPastDue, bucketAmount, sumBy, round2, arr, resetOptions, projectName,
-  bankName, pettyName, billLabel, billingLabel
+  bankName, pettyName, billLabel, billingLabel, supplierKey, getSupplierMasterList,
+  ensureSupplierMasterFromBills
 };
 
 const AppStore = {
@@ -2344,7 +2539,7 @@ const AppRender = {
 };
 
 const AppActions = {
-  addProject, addBill, addBilling, addPayment, addReceipt, addBankAccount,
+  addProject, addSupplier, addBill, addBilling, addPayment, addReceipt, addBankAccount,
   addBankEntry, addReconciliation, addPettyFund, addPettyEntry, addPayroll,
   lockPeriod, unlockPeriod, updateCheckStatus, approveBill, approveBilling,
   approvePayroll, voidBill, voidBilling, voidPayroll, cancelPayment,
