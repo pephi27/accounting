@@ -137,20 +137,17 @@
   <aside>
     <div class="brand">Construction Finance</div>
     <div class="brand-sub">
-      Accountant-grade local-first finance tracker for projects, bills, billings, payments, checks, bank, petty cash, payroll, controls, and reports.
+      Local-first finance tracker for projects, expenses, collections, payments, checks, bank, controls, and reports.
     </div>
     <div class="nav">
       <button class="active" data-view="dashboard">Dashboard</button>
       <button data-view="projects">Projects</button>
-      <button data-view="suppliers">Suppliers</button>
       <button data-view="bills">Expenses</button>
       <button data-view="billings">Collections</button>
       <button data-view="payments">Disbursements</button>
       <button data-view="receipts" class="hidden">Receipts</button>
       <button data-view="checks">Checks</button>
       <button data-view="bank">Bank</button>
-      <button data-view="petty">Petty Cash</button>
-      <button data-view="payroll">Payroll</button>
       <button data-view="controls">Controls</button>
       <button data-view="reports">Reports</button>
       <button data-view="settings">Backup / Settings</button>
@@ -174,31 +171,31 @@
       <div class="panel">
         <div class="section-head">
           <div>
-            <h2>Cash and Liability Position</h2>
-            <div class="muted">Bank book, available bank, petty cash, receivables, payables, and outstanding checks.</div>
+            <h2>Cash Position</h2>
+            <div class="muted">Simple view of collections, expenses, bank availability, and project gains.</div>
           </div>
         </div>
         <div class="grid-4">
           <div class="stat"><div class="label">Bank Book Balance</div><div class="value" id="kpiBankBook">₱0.00</div></div>
           <div class="stat"><div class="label">Available Bank Balance</div><div class="value" id="kpiBankAvailable">₱0.00</div></div>
-          <div class="stat"><div class="label">Petty Cash On Hand</div><div class="value" id="kpiPettyCash">₱0.00</div></div>
           <div class="stat"><div class="label">Outstanding Checks</div><div class="value" id="kpiOutstandingChecks">₱0.00</div></div>
+          <div class="stat"><div class="label">Total Collections</div><div class="value" id="kpiTotalCollections">₱0.00</div></div>
         </div>
         <div class="grid-4" style="margin-top:12px;">
-          <div class="stat"><div class="label">AR Outstanding</div><div class="value" id="kpiAROutstanding">₱0.00</div></div>
-          <div class="stat"><div class="label">AP Outstanding</div><div class="value" id="kpiAPOutstanding">₱0.00</div></div>
-          <div class="stat"><div class="label">This Week Approved Bills</div><div class="value" id="kpiWeeklyBills">₱0.00</div></div>
-          <div class="stat"><div class="label">Payroll This Year</div><div class="value" id="kpiPayrollYear">₱0.00</div></div>
+          <div class="stat"><div class="label">Total Expenses</div><div class="value" id="kpiTotalExpenses">₱0.00</div></div>
+          <div class="stat"><div class="label">Actual Gain</div><div class="value" id="kpiActualGain">₱0.00</div></div>
+          <div class="stat"><div class="label">This Week Expenses</div><div class="value" id="kpiWeeklyBills">₱0.00</div></div>
+          <div class="stat"><div class="label">This Month Collections</div><div class="value" id="kpiMonthCollections">₱0.00</div></div>
         </div>
         <div class="kpi-note">
-          Available Bank = Bank Book - Released but not yet cleared checks. AP outstanding is based on approved bills less released/cleared/posted disbursements.
+          Actual Gain = Total Collections - Total Expenses. Available Bank = Bank Book - released but not yet cleared checks.
         </div>
       </div>
 
       <div class="grid-2">
         <div class="panel">
-          <h3>Recent Bills</h3>
-          <div class="scroll-x"><table><thead><tr><th>Date</th><th>Supplier</th><th>Project</th><th>Status</th><th>Net Payable</th></tr></thead><tbody id="recentBillsTable"></tbody></table></div>
+          <h3>Recent Expenses</h3>
+          <div class="scroll-x"><table><thead><tr><th>Date</th><th>Project</th><th>Category</th><th>Status</th><th>Amount</th></tr></thead><tbody id="recentBillsTable"></tbody></table></div>
         </div>
         <div class="panel">
           <h3>Recent Collections</h3>
@@ -206,14 +203,11 @@
         </div>
       </div>
 
-      <div class="grid-3">
-        <div class="panel"><h3>AP Aging</h3><div id="dashboardAPAging"></div></div>
-        <div class="panel"><h3>AR Aging</h3><div id="dashboardARAging"></div></div>
-        <div class="panel"><h3>Period Controls</h3><div id="dashboardLocks"></div></div>
-      </div>
-
       <div class="grid-2">
-        <div class="panel"><h3>Project Profit Snapshot</h3><div id="projectHealthSummary"></div></div>
+        <div class="panel">
+          <h3>Per-Project Gains Report</h3>
+          <div class="scroll-x"><table><thead><tr><th>Project</th><th>Collections</th><th>Expenses</th><th>Margin</th><th>Margin %</th></tr></thead><tbody id="projectHealthSummary"></tbody></table></div>
+        </div>
         <div class="panel"><h3>Recent Audit Log</h3><div id="dashboardAudit"></div></div>
       </div>
     </section>
@@ -233,35 +227,10 @@
       </div>
       <div class="panel">
         <div class="section-head"><h2>Projects</h2><div class="muted">Project-level collections, expenses, and margin view.</div></div>
-        <div class="scroll-x"><table><thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Contract</th><th>Collected</th><th>Bills</th><th>Margin View</th><th>Actions</th></tr></thead><tbody id="projectsTable"></tbody></table></div>
+        <div class="scroll-x"><table><thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Contract</th><th>Collections</th><th>Expenses</th><th>Margin View</th><th>Actions</th></tr></thead><tbody id="projectsTable"></tbody></table></div>
       </div>
     </section>
 
-    <section id="view-suppliers" class="view hidden">
-      <div class="panel no-print">
-        <h2>Supplier Master</h2>
-        <div class="form-grid">
-          <div><label>Supplier Name</label><input id="supplierName" placeholder="Supplier name"></div>
-          <div><label>Contact Person</label><input id="supplierContact" placeholder="Optional contact"></div>
-          <div><label>Phone</label><input id="supplierPhone" placeholder="Optional phone"></div>
-          <div><label>TIN</label><input id="supplierTin" placeholder="Optional TIN"></div>
-          <div class="span-4"><label>Remarks</label><input id="supplierRemarks" placeholder="Optional notes"></div>
-        </div>
-        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="primary" onclick="addSupplier()">Add Supplier</button>
-          <span class="muted">Add suppliers here once, then choose them from the Expense dropdown.</span>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="section-head">
-          <h2>Suppliers</h2>
-          <div class="toolbar no-print">
-            <input id="supplierSearch" placeholder="Search supplier, contact, phone, TIN" oninput="renderSuppliers()">
-          </div>
-        </div>
-        <div class="scroll-x"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Phone</th><th>TIN</th><th>Remarks</th><th>Actions</th></tr></thead><tbody id="suppliersTable"></tbody></table></div>
-      </div>
-    </section>
 
     <section id="view-bills" class="view hidden">
       <div class="panel no-print">
@@ -269,41 +238,24 @@
         <div class="form-grid">
           <div><label>Date</label><input id="billDate" type="date"></div>
           <div><label>Project</label><select id="billProject"></select></div>
-          <div><label>Supplier</label><select id="billSupplier"></select></div>
           <div><label>Category</label><select id="billCategory"><option>Materials</option><option>Labor</option><option>Overhead</option><option>Admin</option><option>Equipment</option><option>Subcon</option></select></div>
-
-          <div><label>Work Type</label><select id="billWorkType"><option>Civil</option><option>Structural</option><option>Architectural</option><option>Electrical</option><option>Plumbing</option><option>Mechanical</option><option>Finishing</option><option>Office</option><option>Other</option></select></div>
-          <div><label>Document Type</label><select id="billDocType"><option>Invoice</option><option>DR</option><option>OR</option><option>CR</option></select></div>
-          <div><label>Reference No.</label><input id="billReference" placeholder="Reference number"></div>
-          <div><label>Status</label><select id="billStatus"><option>Pending</option><option>Cancelled</option></select></div>
-
-          <div><label>Amount</label><input id="billAmount" type="number" step="0.01" placeholder="0.00" oninput="previewBillAmounts()"></div>
-          <div>
-            <label>With VAT 12%</label>
-            <div style="display:flex; align-items:center; gap:10px; min-height:42px; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#0b1220;">
-              <input id="billWithVat" type="checkbox" onchange="previewBillAmounts()">
-              <span class="muted">Check if amount already includes 12% VAT</span>
-            </div>
-          </div>
-          <div><label>VAT Amount</label><input id="billVatAmount" readonly></div>
-          <div><label>Net Amount</label><input id="billNetAmount" readonly></div>
-
+          <div><label>Amount</label><input id="billAmount" type="number" step="0.01" placeholder="0.00"></div>
           <div class="span-4"><label>Remarks</label><input id="billRemarks" placeholder="Optional notes"></div>
         </div>
         <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
           <button class="primary" onclick="addBill()">Add Expense</button>
-          <span class="muted">This screen is for detailed expense recording. Use Payments Made only when the expense is actually paid.</span>
+          <span class="muted">Keep this simple: record what was actually spent per project.</span>
         </div>
       </div>
       <div class="panel">
         <div class="section-head">
           <h2>Expense Register</h2>
           <div class="toolbar no-print">
-            <input id="billSearch" placeholder="Search supplier, project, reference" oninput="renderBills()">
+            <input id="billSearch" placeholder="Search project, category, remarks" oninput="renderBills()">
             <select id="billFilterStatus" onchange="renderBills()"><option value="">All Statuses</option><option>Pending</option><option>Partial</option><option>Paid</option><option>Cancelled</option></select>
           </div>
         </div>
-        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Project</th><th>Supplier</th><th>Category</th><th>Work Type</th><th>Doc</th><th>Ref No.</th><th>Status</th><th>Amount</th><th>VAT</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="billsTable"></tbody></table></div>
+        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Project</th><th>Category</th><th>Status</th><th>Amount</th><th>Balance</th><th>Remarks</th><th>Actions</th></tr></thead><tbody id="billsTable"></tbody></table></div>
       </div>
     </section>
 
@@ -442,59 +394,6 @@
       </div>
     </section>
 
-    <section id="view-petty" class="view hidden">
-      <div class="grid-2">
-        <div class="panel no-print">
-          <h2>Petty Cash Fund</h2>
-          <div class="form-grid">
-            <div><label>Fund Name</label><input id="pettyName" placeholder="Main Office Petty Cash"></div>
-            <div><label>Custodian</label><input id="pettyCustodian" placeholder="Responsible person"></div>
-            <div><label>Starting Fund</label><input id="pettyStarting" type="number" step="0.01" placeholder="0.00"></div>
-            <div><label>Notes</label><input id="pettyNotes" placeholder="Optional notes"></div>
-          </div>
-          <div style="margin-top:12px;"><button class="primary" onclick="addPettyFund()">Add Petty Cash Fund</button></div>
-        </div>
-        <div class="panel no-print">
-          <h2>Petty Cash Funding / Adjustment</h2>
-          <div class="form-grid">
-            <div><label>Date</label><input id="pettyEntryDate" type="date"></div>
-            <div><label>Petty Fund</label><select id="pettyEntryFund"></select></div>
-            <div><label>Type</label><select id="pettyEntryType"><option>Funding</option><option>Adjustment</option></select></div>
-            <div><label>Amount</label><input id="pettyEntryAmount" type="number" step="0.01" placeholder="0.00"></div>
-            <div class="span-2"><label>Reference</label><input id="pettyEntryReference" placeholder="Replenishment / note"></div>
-            <div class="span-2"><label>Remarks</label><input id="pettyEntryRemarks" placeholder="Optional notes"></div>
-          </div>
-          <div style="margin-top:12px;"><button class="primary" onclick="addPettyEntry()">Add Petty Entry</button></div>
-        </div>
-      </div>
-      <div class="panel">
-        <h2>Petty Cash Summary</h2>
-        <div class="scroll-x"><table><thead><tr><th>Fund</th><th>Custodian</th><th>Starting</th><th>Funding/Adj</th><th>Spent</th><th>Balance</th><th>Actions</th></tr></thead><tbody id="pettyFundsTable"></tbody></table></div>
-      </div>
-    </section>
-
-    <section id="view-payroll" class="view hidden">
-      <div class="panel no-print">
-        <h2>Payroll Summary</h2>
-        <div class="form-grid">
-          <div><label>Payroll Date</label><input id="payrollDate" type="date"></div>
-          <div><label>Payroll Period</label><input id="payrollPeriod" placeholder="Jan 1-15, 2026"></div>
-          <div><label>Employee</label><input id="payrollEmployee" placeholder="Employee name"></div>
-          <div><label>Department</label><input id="payrollDept" placeholder="Accounting / Office / Operations"></div>
-          <div><label>Gross</label><input id="payrollGross" type="number" step="0.01" placeholder="0.00"></div>
-          <div><label>Deductions</label><input id="payrollDeductions" type="number" step="0.01" placeholder="0.00"></div>
-          <div><label>Employer Share</label><input id="payrollEmployerShare" type="number" step="0.01" placeholder="0.00"></div>
-          <div><label>Net Pay</label><input id="payrollNet" type="number" step="0.01" placeholder="0.00"></div>
-          <div><label>Status</label><select id="payrollStatus"><option>Draft</option><option>Approved</option></select></div>
-          <div class="span-3"><label>Remarks</label><input id="payrollRemarks" placeholder="Optional notes"></div>
-        </div>
-        <div style="margin-top:12px;"><button class="primary" onclick="addPayroll()">Add Payroll</button></div>
-      </div>
-      <div class="panel">
-        <h2>Payroll Register</h2>
-        <div class="scroll-x"><table><thead><tr><th>Date</th><th>Period</th><th>Employee</th><th>Department</th><th>Status</th><th>Gross</th><th>Deductions</th><th>Employer Share</th><th>Net</th><th>Actions</th></tr></thead><tbody id="payrollTable"></tbody></table></div>
-      </div>
-    </section>
 
     <section id="view-controls" class="view hidden">
       <div class="grid-2">
@@ -579,7 +478,7 @@
           <button onclick="migrateLegacyData()">Try Legacy Migration</button>
         </div>
         <div class="footer-note">
-          Legacy migration maps projects, expenses, collections, checks, banks, petty cash, and payroll from your earlier local version. In this Supabase refactor, the whole app state is stored in one cloud row first so the behavior stays stable before a later normalized-table migration.
+          Legacy migration maps projects, expenses, collections, checks, and banks from your earlier local version. The app still tolerates older petty cash and payroll data in saved backups so old files do not break.
         </div>
       </div>
       <div class="panel">
@@ -603,10 +502,9 @@ const AppConfig = {
     stateKey: 'main'
   },
   titles: {
-    dashboard: ['Dashboard', 'Monitor cash, payables, receivables, controls, and bank exposure.'],
+    dashboard: ['Dashboard', 'Monitor cash, collections, expenses, bank balance, and project gains.'],
     projects: ['Projects', 'Project master list used across all bills, billings, receipts, and payments.'],
-    suppliers: ['Suppliers', 'Maintain a supplier master so Expenses can use a dropdown instead of manual typing.'],
-    bills: ['Expenses', 'Record detailed expense entries, then settle them through Payments Made when needed.'],
+    bills: ['Expenses', 'Record simple expense entries per project, then settle them through Payments Made when needed.'],
     billings: ['Collections', 'Record actual money received by check, GCash, online bank transfer, or cash.'],
     payments: ['Payments Made', 'Record actual payments by bank, petty cash, cash, or check against expenses.'],
     receipts: ['Receipts', 'Legacy receipts view is hidden in the simplified setup.'],
@@ -645,7 +543,6 @@ async function initApp(){
   bindNavigation();
   setDefaultDates();
   hydrateFromLocal();
-  ensureSupplierMasterFromBills();
   populateSelectors();
   renderAll();
   showView('dashboard');
@@ -972,10 +869,6 @@ function populateSelectors(){
     state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`)
   ).join('');
   ['billProject','billingProject'].forEach(id => resetOptions(id, projectOptions));
-  const supplierOptions = ['<option value="">Select Supplier</option>'].concat(
-    getSupplierMasterList().map(s => `<option value="${escapeHtml(s.name)}">${escapeHtml(s.name)}</option>`)
-  ).join('');
-  resetOptions('billSupplier', supplierOptions);
   const reportProjectOptions = ['<option value="">All Projects</option>'].concat(
     state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`)
   ).join('');
@@ -983,7 +876,7 @@ function populateSelectors(){
 
   const billOptions = ['<option value="">Select Approved/Open Bill</option>'].concat(
     state.bills.filter(b => getBillBalance(b.id) > 0 && getBillDisplayStatus(b) !== 'Cancelled')
-      .map(b => `<option value="${escapeHtml(b.id)}">${escapeHtml((b.docType || 'Expense') + ' ' + (b.reference || b.supplier || b.id))} | ${escapeHtml(projectName(b.projectId))} | Bal ${peso(getBillBalance(b.id))}</option>`)
+      .map(b => `<option value="${escapeHtml(b.id)}">${escapeHtml('Expense')} | ${escapeHtml(projectName(b.projectId))} | ${escapeHtml(b.category || 'General')} | Bal ${peso(getBillBalance(b.id))}</option>`)
   ).join('');
   resetOptions('paymentBill', billOptions);
 
@@ -1078,12 +971,7 @@ function ensureSupplierMasterFromBills(){
 }
 
 function previewBillAmounts(){
-  const gross = round2(numberOf('billAmount'));
-  const withVat = document.getElementById('billWithVat')?.checked;
-  const vatAmount = withVat ? round2(gross * (12 / 112)) : 0;
-  const netAmount = round2(gross - vatAmount);
-  document.getElementById('billVatAmount').value = vatAmount ? vatAmount.toFixed(2) : '0.00';
-  document.getElementById('billNetAmount').value = netAmount ? netAmount.toFixed(2) : '0.00';
+  return;
 }
 function previewBillingAmounts(){
   const billed = numberOf('billingAmount');
@@ -1142,45 +1030,37 @@ function addBill(){
   const date = valueOf('billDate') || today();
   if (!ensureUnlocked(date, 'add expense')) return;
   const projectId = valueOf('billProject');
-  const supplier = valueOf('billSupplier');
   const grossAmount = round2(numberOf('billAmount'));
-  if (!projectId || !supplier || !grossAmount) return alert('Date, project, supplier, and amount are required.');
-  const withVat = document.getElementById('billWithVat')?.checked;
-  const vatAmount = withVat ? round2(grossAmount * (12 / 112)) : 0;
-  const netAmount = round2(grossAmount - vatAmount);
-  const selectedStatus = valueOf('billStatus') || 'Pending';
-  const internalStatus = selectedStatus === 'Cancelled' ? 'Void' : 'Approved';
+  if (!projectId || !grossAmount) return alert('Date, project, and amount are required.');
+  const internalStatus = 'Approved';
   const bill = {
     id: uid('bill'),
     date,
     dueDate: '',
     projectId,
-    supplier,
+    supplier: '',
     category: valueOf('billCategory'),
-    workType: valueOf('billWorkType'),
-    docType: valueOf('billDocType'),
-    reference: valueOf('billReference'),
+    workType: '',
+    docType: '',
+    reference: '',
     status: internalStatus,
-    entryStatus: selectedStatus,
-    baseAmount: netAmount,
-    vatRate: withVat ? 12 : 0,
-    vatAmount,
+    entryStatus: 'Pending',
+    baseAmount: grossAmount,
+    vatRate: 0,
+    vatAmount: 0,
     whtRate: 0,
     whtAmount: 0,
     retentionAmount: 0,
     grossAmount,
     netPayable: grossAmount,
-    particulars: `${valueOf('billDocType')} ${valueOf('billReference')}`.trim(),
+    particulars: valueOf('billCategory') || 'Expense',
     remarks: valueOf('billRemarks'),
-    withVat: Boolean(withVat),
+    withVat: false,
     createdAt: new Date().toISOString()
   };
   state.bills.unshift(bill);
-  logAudit('ADD', 'Expense', bill.reference || bill.id, `${supplier} ${peso(bill.grossAmount)}`);
-  clearFields(['billSupplier','billReference','billAmount','billRemarks']);
-  const vatBox = document.getElementById('billWithVat');
-  if (vatBox) vatBox.checked = false;
-  previewBillAmounts();
+  logAudit('ADD', 'Expense', bill.id, `${projectName(projectId)} ${peso(bill.grossAmount)}`);
+  clearFields(['billAmount','billRemarks']);
   saveState();
   showView('bills');
 }
@@ -1619,6 +1499,18 @@ function getCurrentYearPayrollTotal(){
   const year = String(new Date().getFullYear());
   return round2(state.payroll.filter(p => (p.date || '').startsWith(year) && p.status !== 'Draft').reduce((s,x) => s + (x.net || 0), 0));
 }
+
+function getTotalCollectionsReceived(){
+  return round2(state.billings.filter(b => getBillingDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netReceivable || x.collectedAmount || 0), 0));
+}
+function getTotalExpensesRecorded(){
+  return round2(state.bills.filter(b => getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.grossAmount || 0), 0));
+}
+function getCurrentMonthCollectionsTotal(){
+  const now = new Date();
+  const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  return round2(state.billings.filter(b => (b.date || '').startsWith(month) && getBillingDisplayStatus(b) !== 'Void').reduce((s,x) => s + (x.netReceivable || x.collectedAmount || 0), 0));
+}
 function getLastReconciliation(bankId){
   return [...state.reconciliations].filter(r => r.bankId === bankId).sort((a,b) => (b.date || '').localeCompare(a.date || ''))[0];
 }
@@ -1651,7 +1543,6 @@ function renderAll(){
   toggleReceiptBankWrap();
   renderDashboard();
   renderProjects();
-  renderSuppliers();
   renderBills();
   renderBillings();
   renderPayments();
@@ -1670,33 +1561,34 @@ function renderDashboard(){
   const bankBook = getTotalBankBookBalance();
   const outstanding = getTotalOutstandingChecks();
   const available = bankBook - outstanding;
+  const totalCollections = getTotalCollectionsReceived();
+  const totalExpenses = getTotalExpensesRecorded();
+  const actualGain = totalCollections - totalExpenses;
   text('kpiBankBook', peso(bankBook));
   text('kpiBankAvailable', peso(available));
-  text('kpiPettyCash', peso(getTotalPettyCash()));
   text('kpiOutstandingChecks', peso(outstanding));
-  text('kpiAROutstanding', peso(getTotalAROutstanding()));
-  text('kpiAPOutstanding', peso(getTotalAPOutstanding()));
+  text('kpiTotalCollections', peso(totalCollections));
+  text('kpiTotalExpenses', peso(totalExpenses));
+  text('kpiActualGain', peso(actualGain));
   text('kpiWeeklyBills', peso(getWeeklyApprovedBillsTotal()));
-  text('kpiPayrollYear', peso(getCurrentYearPayrollTotal()));
+  text('kpiMonthCollections', peso(getCurrentMonthCollectionsTotal()));
 
   const recentBills = [...state.bills].sort((a,b) => (b.date || '').localeCompare(a.date || '')).slice(0,6);
-  html('recentBillsTable', recentBills.length ? recentBills.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.supplier)}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillDisplayStatus(b))}</td><td>${peso(b.netPayable || b.grossAmount || 0)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No bills yet.</td></tr>`);
+  html('recentBillsTable', recentBills.length ? recentBills.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${escapeHtml(b.category || '')}</td><td>${statusBadge(getBillDisplayStatus(b))}</td><td>${peso(b.grossAmount || 0)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No expenses yet.</td></tr>`);
 
   const recentBillings = [...state.billings].sort((a,b) => (b.date || '').localeCompare(a.date || '')).slice(0,6);
-  html('recentBillingsTable', recentBillings.length ? recentBillings.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.method || b.client || '')}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillingDisplayStatus(b))}</td><td>${peso(b.netReceivable || 0)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No collections yet.</td></tr>`);
+  html('recentBillingsTable', recentBillings.length ? recentBillings.map(b => `<tr><td>${escapeHtml(b.date)}</td><td>${escapeHtml(b.method || '')}</td><td>${escapeHtml(projectName(b.projectId))}</td><td>${statusBadge(getBillingDisplayStatus(b))}</td><td>${peso(b.netReceivable || 0)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No collections yet.</td></tr>`);
 
-  html('dashboardAPAging', summaryList(getAPAgingSummary(), true));
-  html('dashboardARAging', summaryList(getARAgingSummary(), true));
-  html('dashboardLocks', state.periodLocks.length ? state.periodLocks.slice(0,8).map(x => summaryLine(x.month, `${x.reason || 'Locked'} | ${x.lockedBy || ''}`)).join('') : '<div class="muted">No locked periods.</div>');
+  const projectRows = state.projects.map(project => {
+    const collections = state.billings.filter(b => b.projectId === project.id && getBillingDisplayStatus(b) !== 'Void').reduce((s, x) => s + (x.netReceivable || x.collectedAmount || 0), 0);
+    const expenses = state.bills.filter(b => b.projectId === project.id && getBillDisplayStatus(b) !== 'Cancelled').reduce((s, x) => s + (x.grossAmount || 0), 0);
+    const margin = collections - expenses;
+    const marginPct = collections > 0 ? `${round2((margin / collections) * 100).toFixed(2)}%` : '—';
+    return { name: projectName(project.id), collections, expenses, margin, marginPct };
+  }).sort((a,b) => b.margin - a.margin);
+  html('projectHealthSummary', projectRows.length ? projectRows.map(row => `<tr><td>${escapeHtml(row.name)}</td><td>${peso(row.collections)}</td><td>${peso(row.expenses)}</td><td class="${row.margin >= 0 ? 'good' : 'bad'}">${peso(row.margin)}</td><td>${escapeHtml(row.marginPct)}</td></tr>`).join('') : `<tr><td colspan="5" class="muted">No project data yet.</td></tr>`);
 
-  const projectHealth = state.projects.map(p => {
-    const billed = state.billings.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netReceivable || 0), 0);
-    const bills = state.bills.filter(b => b.projectId === p.id && getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.netPayable || x.grossAmount || 0), 0);
-    return { label: `${p.name || p.code || 'Unnamed Project'}`, amount: billed - bills };
-  }).sort((a,b) => b.amount - a.amount).slice(0,8);
-  html('projectHealthSummary', projectHealth.length ? projectHealth.map(item => `<div style="padding:8px 0;border-bottom:1px solid rgba(148,163,184,.12);display:flex;justify-content:space-between;gap:12px;"><span>${escapeHtml(item.label)}</span><strong class="${item.amount >= 0 ? 'good':'bad'}">${peso(item.amount)}</strong></div>`).join('') : '<div class="muted">No projects yet.</div>');
-
-  html('dashboardAudit', state.auditLog.length ? state.auditLog.slice(0,8).map(a => summaryLine(`${a.action} ${a.entity}`, `${a.reference} | ${new Date(a.timestamp).toLocaleString()}`)).join('') : '<div class="muted">No audit entries yet.</div>');
+  html('dashboardAudit', state.auditLog.length ? state.auditLog.slice(0,8).map(x => summaryLine(`${x.action} ${x.entity}`, `${x.label || ''} | ${formatDateTime(x.createdAt)}`)).join('') : '<div class="muted">No audit entries yet.</div>');
 }
 
 function renderProjects(){
@@ -1754,7 +1646,7 @@ function renderBills(){
   const filterStatus = valueOf('billFilterStatus');
   const rows = state.bills.filter(b => {
     const status = getBillDisplayStatus(b);
-    const hay = `${b.supplier} ${projectName(b.projectId)} ${b.reference || ''} ${b.docType || ''} ${b.category || ''} ${b.workType || ''}`.toLowerCase();
+    const hay = `${projectName(b.projectId)} ${b.category || ''} ${b.remarks || ''}`.toLowerCase();
     if (search && !hay.includes(search)) return false;
     if (filterStatus && status !== filterStatus) return false;
     return true;
@@ -1764,15 +1656,11 @@ function renderBills(){
     return `<tr>
       <td>${escapeHtml(b.date)}</td>
       <td>${escapeHtml(projectName(b.projectId))}</td>
-      <td>${escapeHtml(b.supplier)}</td>
       <td>${escapeHtml(b.category || '')}</td>
-      <td>${escapeHtml(b.workType || '')}</td>
-      <td>${escapeHtml(b.docType || '')}</td>
-      <td>${escapeHtml(b.reference || '')}</td>
       <td>${statusBadge(status)}</td>
       <td>${peso(b.grossAmount || 0)}</td>
-      <td>${b.withVat || (b.vatAmount || 0) > 0 ? peso(b.vatAmount || 0) : '—'}</td>
       <td>${peso(balance)}</td>
+      <td>${escapeHtml(b.remarks || '')}</td>
       <td>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
           ${status !== 'Cancelled' ? `<button class="danger" onclick="voidBill('${b.id}')">Cancel</button>` : ''}
@@ -1781,7 +1669,7 @@ function renderBills(){
       </td>
     </tr>`;
   }).join('');
-  html('billsTable', rows || `<tr><td colspan="12" class="muted">No expenses found.</td></tr>`);
+  html('billsTable', rows || `<tr><td colspan="8" class="muted">No expenses found.</td></tr>`);
 }
 
 function renderBillings(){
@@ -2061,7 +1949,7 @@ function renderSupabasePlan(){
     ${summaryLine('payload', 'entire accountant-grade app state as jsonb')}
     ${summaryLine('updated_at', 'last cloud save timestamp')}
     ${summaryLine('Next phase later', 'split this into normalized tables after cloud storage is stable')}
-    ${summaryLine('Future normalized tables', 'projects, bills, billings, payments, receipts, checks, bank, petty, payroll, locks, audit')}
+    ${summaryLine('Future normalized tables', 'projects, bills, billings, payments, receipts, checks, bank, locks, audit')}
   `);
 }
 
@@ -2525,6 +2413,7 @@ const AppCalc = {
   getOutstandingChecksFor, getPreparedChecksFor, getTotalBankBookBalance,
   getTotalOutstandingChecks, getTotalPettyCash, getTotalAROutstanding,
   getTotalAPOutstanding, getWeeklyApprovedBillsTotal, getCurrentYearPayrollTotal,
+  getTotalCollectionsReceived, getTotalExpensesRecorded, getCurrentMonthCollectionsTotal,
   getLastReconciliation, getAPAgingSummary, getARAgingSummary
 };
 
