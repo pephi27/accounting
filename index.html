@@ -222,7 +222,6 @@
       <div class="panel no-print">
         <h2>Project Master</h2>
         <div class="form-grid">
-          <div><label>Project Code</label><input id="projectCode" placeholder="PRJ-001"></div>
           <div><label>Project Name</label><input id="projectName" placeholder="Project name"></div>
           <div><label>Client</label><input id="projectClient" placeholder="Client name"></div>
           <div><label>Status</label><select id="projectStatus"><option>Ongoing</option><option>Completed</option><option>On Hold</option></select></div>
@@ -234,7 +233,7 @@
       </div>
       <div class="panel">
         <div class="section-head"><h2>Projects</h2><div class="muted">Project-level collections, expenses, and margin view.</div></div>
-        <div class="scroll-x"><table><thead><tr><th>Code</th><th>Project</th><th>Client</th><th>Status</th><th>Contract</th><th>Collected</th><th>Bills</th><th>Margin View</th><th>Actions</th></tr></thead><tbody id="projectsTable"></tbody></table></div>
+        <div class="scroll-x"><table><thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Contract</th><th>Collected</th><th>Bills</th><th>Margin View</th><th>Actions</th></tr></thead><tbody id="projectsTable"></tbody></table></div>
       </div>
     </section>
 
@@ -970,7 +969,7 @@ function showView(name){
 
 function populateSelectors(){
   const projectOptions = ['<option value="">Select Project</option>'].concat(
-    state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.code)} - ${escapeHtml(p.name)}</option>`)
+    state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`)
   ).join('');
   ['billProject','billingProject'].forEach(id => resetOptions(id, projectOptions));
   const supplierOptions = ['<option value="">Select Supplier</option>'].concat(
@@ -978,7 +977,7 @@ function populateSelectors(){
   ).join('');
   resetOptions('billSupplier', supplierOptions);
   const reportProjectOptions = ['<option value="">All Projects</option>'].concat(
-    state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.code)} - ${escapeHtml(p.name)}</option>`)
+    state.projects.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`)
   ).join('');
   resetOptions('reportProjectFilter', reportProjectOptions);
 
@@ -1015,7 +1014,7 @@ function resetOptions(id, htmlOptions){
 
 function projectName(id){
   const p = state.projects.find(x => x.id === id);
-  return p ? `${p.code} - ${p.name}` : '—';
+  return p ? `${p.name || p.code || 'Unnamed Project'}` : '—';
 }
 function bankName(id){
   const b = state.bankAccounts.find(x => x.id === id);
@@ -1098,12 +1097,11 @@ function round2(v){ return Math.round((Number(v||0) + Number.EPSILON) * 100) / 1
 
 // --- Domain actions ----------------------------------------------------------------
 function addProject(){
-  const code = valueOf('projectCode');
   const name = valueOf('projectName');
-  if (!code || !name) return alert('Project code and name are required.');
+  if (!name) return alert('Project name is required.');
   state.projects.unshift({
     id: uid('project'),
-    code, name,
+    name,
     client: valueOf('projectClient'),
     status: valueOf('projectStatus'),
     type: valueOf('projectType'),
@@ -1111,8 +1109,8 @@ function addProject(){
     remarks: valueOf('projectRemarks'),
     createdAt: new Date().toISOString()
   });
-  logAudit('ADD', 'Project', code, `${name}`);
-  clearFields(['projectCode','projectName','projectClient','projectContract','projectRemarks']);
+  logAudit('ADD', 'Project', name, `${name}`);
+  clearFields(['projectName','projectClient','projectContract','projectRemarks']);
   saveState();
   showView('projects');
 }
@@ -1694,7 +1692,7 @@ function renderDashboard(){
   const projectHealth = state.projects.map(p => {
     const billed = state.billings.filter(b => b.projectId === p.id && b.status !== 'Draft' && b.status !== 'Void').reduce((s,x) => s + (x.netReceivable || 0), 0);
     const bills = state.bills.filter(b => b.projectId === p.id && getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.netPayable || x.grossAmount || 0), 0);
-    return { label: `${p.code} - ${p.name}`, amount: billed - bills };
+    return { label: `${p.name || p.code || 'Unnamed Project'}`, amount: billed - bills };
   }).sort((a,b) => b.amount - a.amount).slice(0,8);
   html('projectHealthSummary', projectHealth.length ? projectHealth.map(item => `<div style="padding:8px 0;border-bottom:1px solid rgba(148,163,184,.12);display:flex;justify-content:space-between;gap:12px;"><span>${escapeHtml(item.label)}</span><strong class="${item.amount >= 0 ? 'good':'bad'}">${peso(item.amount)}</strong></div>`).join('') : '<div class="muted">No projects yet.</div>');
 
@@ -1707,8 +1705,7 @@ function renderProjects(){
     const bills = state.bills.filter(b => b.projectId === p.id && getBillDisplayStatus(b) !== 'Cancelled').reduce((s,x) => s + (x.netPayable || x.grossAmount || 0), 0);
     const margin = collected - bills;
     return `<tr>
-      <td>${escapeHtml(p.code)}</td>
-      <td><strong>${escapeHtml(p.name)}</strong><br><span class="muted">${escapeHtml(p.remarks || '')}</span></td>
+      <td><strong>${escapeHtml(p.name || p.code || 'Unnamed Project')}</strong><br><span class="muted">${escapeHtml(p.remarks || '')}</span></td>
       <td>${escapeHtml(p.client || '')}</td>
       <td>${statusBadge(p.status)}</td>
       <td>${peso(p.contractAmount)}</td>
@@ -1717,7 +1714,7 @@ function renderProjects(){
       <td><span class="${margin >= 0 ? 'good' : 'bad'}">${peso(margin)}</span></td>
       <td><button class="danger" onclick="deleteProject('${p.id}')">Delete</button></td>
     </tr>`;
-  }).join('') : `<tr><td colspan="9" class="muted">No projects yet.</td></tr>`);
+  }).join('') : `<tr><td colspan="8" class="muted">No projects yet.</td></tr>`);
 }
 
 
@@ -2447,8 +2444,8 @@ function seedSampleData(){
     if (!confirm('There is already data. Add sample data anyway?')) return;
   }
 
-  const project = { id: uid('project'), code: 'PRJ-001', name: 'Edifice Tower Renovation', client: 'Edifice Group', status: 'Ongoing', type: 'Construction', contractAmount: 2500000, remarks: 'Sample project' };
-  const office = { id: uid('project'), code: 'OFFICE', name: 'Office Operations', client: 'Internal', status: 'Ongoing', type: 'Office', contractAmount: 0, remarks: 'Office costs' };
+  const project = { id: uid('project'), name: 'Edifice Tower Renovation', client: 'Edifice Group', status: 'Ongoing', type: 'Construction', contractAmount: 2500000, remarks: 'Sample project' };
+  const office = { id: uid('project'), name: 'Office Operations', client: 'Internal', status: 'Ongoing', type: 'Office', contractAmount: 0, remarks: 'Office costs' };
   const bank = { id: uid('bank'), bankName: 'BDO', label: 'Operating Account', startingBalance: 500000, accountNo: '****1234', createdAt: new Date().toISOString() };
   const petty = { id: uid('petty'), name: 'Main Office Petty Cash', custodian: 'Cashier', startingBalance: 15000, notes: 'Sample', createdAt: new Date().toISOString() };
   state.projects.unshift(office, project);
